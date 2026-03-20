@@ -42,6 +42,7 @@ class ClientHandler:
             self.running = False
             self.socket.close()
             self.manager.remove_client(self)
+            self.manager = None
 
     def set_room(self, room: Room):
         self.room = room
