@@ -1,5 +1,31 @@
 # Orchezz
 
+Nom : OrcheZZ
+
+Trois niveaux : 
+Musique + Partition avec nom note
+Que la partition sans aide de note
+Que la musique => Oreille musicale
+
+Filtres : 
+Musique classique
+Musique rock
+Musique jeu vidéo
+Musique animé
+…
+
+Trois difficultés : 
+Notes qui se suivent
+Notes disjointes
+Accords
+
+On se connecte à une salle avec d’autres gens
+La partie commence
+A chaque fois => une partition est envoyé
+Le client doit le jouer et la piste est envoyé (on lui laisse peu de temps)
+Le serveur vérifie puis joue toutes les pistes en même temps
+
+Il faut un maitre du jeu (lancer la partie, choisir les filtres, créer la salle, …)
 
 
 ## Getting started
