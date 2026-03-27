@@ -28,6 +28,18 @@
     align-items: center;
 }
 
+.flex-nowrap {
+    flex-wrap: nowrap;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-wrap-reverse {
+    flex-wrap: wrap-reverse;
+}
+
 .margin-small {
     margin: 5px;
 }
