@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    client = Server("localhost", 8880)
+    client = Server("localhost", 8888)
     client.connect()
     return render_template('index.html')
 

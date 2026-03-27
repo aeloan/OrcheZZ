@@ -1,10 +1,9 @@
 import socket
 from typing import Optional
 
-from Protocol import Protocol
 from RequestDispatcher import RequestDispatcher
 from Room import Room
-from SockerFramer import SocketFramer
+from common.SockerFramer import SocketFramer
 
 
 class ClientHandler:
@@ -22,7 +21,7 @@ class ClientHandler:
         while self.running:
             try:
                 raw_msg = framer.read_message()
-                message = raw_msg.decode(errors="ignore")
+                message = raw_msg.decode()
                 self.process_message(message)
             except Exception as e:
                 print(f"Erreur client {self.address}: {e}")
@@ -46,9 +45,11 @@ class ClientHandler:
             self.send({"type": "error", "msg": "Unknown command"})
 
 
-    def send(self, data: dict):
+    def send(self, message: str):
+        framer = SocketFramer(self.socket)
+
         try:
-            self.socket.send(Protocol.encode(data))
+            self.socket.send(framer.write_message(message.encode()))
         except Exception as e:
             print(f"Erreur send {self.address} : {e}")
             self.close()
