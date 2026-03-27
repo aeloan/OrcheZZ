@@ -23,11 +23,11 @@ class Room:
         while self.running:
             # # TODO : update état du jeu
             # state = {"type": "state", "players": [id(p) for p in self.players]}
-            # for p in self.players:
-            #     try:
-            #         p.send(state)
-            #     except:
-            #         pass
+            # send_room(state)
             # import time
             # time.sleep(1)
             pass
+
+    def send_room(self, state):
+        for p in self.players:
+            p.send(state)

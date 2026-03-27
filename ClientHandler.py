@@ -2,7 +2,9 @@ import socket
 from typing import Optional
 
 from Protocol import Protocol
+from RequestDispatcher import RequestDispatcher
 from Room import Room
+from SockerFramer import SocketFramer
 
 
 class ClientHandler:
@@ -12,23 +14,38 @@ class ClientHandler:
         self.manager = manager
         self.running = True
         self.room: Optional[Room] = None
+        self.client_name = None
+        self.requestDispatcher = RequestDispatcher()
 
     def handle(self):
+        framer = SocketFramer(self.socket)
+
         while self.running:
             try:
-                data = self.socket.recv(1024)
-                if not data:
-                    break
-
-                message = Protocol.decode(data=data)
-
-                # TODO (envoyer les infos à la room, créer/rejoindre une salle, ...)
-
+                raw_msg = framer.read_message()
+                message = raw_msg.decode(errors="ignore")
+                self.process_message(message)
             except Exception as e:
-                print(f"Erreur client {self.address} : {e}")
+                print(f"Erreur client {self.address}: {e}")
                 break
 
         self.close()
+
+    def process_message(self, message: str):
+        parts = message.split()
+        cmd = parts[0]
+        args = parts[1:]
+
+        self.dispatch(cmd=cmd, args=args)
+
+    def dispatch(self, cmd, args):
+        handler = self.requestDispatcher.handlers.get(cmd)
+
+        if handler:
+            handler(args)
+        else:
+            self.send({"type": "error", "msg": "Unknown command"})
+
 
     def send(self, data: dict):
         try:

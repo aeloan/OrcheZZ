@@ -1,0 +1,24 @@
+Syntaxe :
+[TAILLE]\n[CODE COMMANDE] [ARGS]
+
+
+-- Commande Globale
+LS : Récupérer les salles disponibles
+
+-- Commande Salle
+CR ## : Créer une salle - Nom Joueur
+RR ## ## : Rejoindre une salle - Numéro de salle - Nom Joueur
+PR : Récuperer les joueurs dans la salle
+LR : Partir de la salle
+
+-- Commande Gestion de partie (admin)
+SG : Démarrer la partie
+AD ## : Ajouter la difficulté de la partition- Code difficulté
+DD ## : Supprimer la difficulté de la partition - Code difficulté
+AS ## : Ajouter un style musical - Code style
+DS ## : Supprimer un style musical - Code style
+AL ## : Ajouter le niveau - Code niveau
+DL ## : Supprimer le niveau - Code niveau
+
+-- Cours du jeu
+AU ## : Envoi de l'audio - Audio MP3
