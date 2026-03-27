@@ -1,0 +1,65 @@
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-row { display: flex; flex-direction: row; }
+
+.jc-center { justify-content: center; }
+.jc-start  { justify-content: flex-start; }
+.jc-end    { justify-content: flex-end; }
+.jc-between { justify-content: space-between; } /* Idéal pour un header */
+.jc-around { justify-content: space-around; }
+
+.ai-center { align-items: center; }
+.ai-start  { align-items: flex-start; }
+.ai-end    { align-items: flex-end; }
+
+.gap-1 { gap: 8px; }
+.gap-2 { gap: 16px; }
+.gap-3 { gap: 32px; }
+
+.grow-0 { display: flex; flex-grow: 0; }
+
+.grow-1 { display: flex; flex-grow: 1; }
+
+.grow-2 { display: flex; flex-grow: 2; }
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-wrap-reverse {
+    flex-wrap: wrap-reverse;
+}
+
+.margin-small {
+    margin: 5px;
+}
+
+.margin-medium {
+    margin: 10px;
+}
+
+.margin-large {
+    margin: 15px;
+}
+
+.padding-small {
+    padding: 5px;
+}
+
+.padding-medium {
+    padding: 10px;
+}
+
+.padding-large {
+    padding: 15px;
+}
