@@ -1,6 +1,9 @@
+{% from 'components/_player.html' import player %}
+
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Orchezz - Lobby</title>
@@ -11,7 +14,13 @@
         <div class="flex-row grow-1">
             <div class="flex-col grow-1">
                 <h2>Participants</h2>
-
+                <div class="flex-row grow-1">
+                    {% for j in joueurs %}
+                        {{ player(j.pseudo, j.pret) }}
+                    {% else %}
+                        <p>En attente de joueurs...</p>
+                    {% endfor %}
+                </div>
             </div>
             <div class="flex-col grow-1">
                 <h2>Paramètres</h2>

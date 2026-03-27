@@ -4,3 +4,8 @@
     font-size: 20px;
     border-radius: 15px;
 }
+
+.player-card {
+    border: 2px solid;
+    border-radius: 20%
+}
