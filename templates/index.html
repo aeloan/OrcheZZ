@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Orchezz</title>
+</head>
+<body>
+    <div class="game-launcher flex-col flex-center">
+        <h1>Orchezz</h1>
+        <a href="{{ url_for('creerPartie') }}">
+            <button class="btn-menu">Créer une partie</button>
+        </a>
+        <a href="{{ url_for('connexionRoom') }}">
+            <button class="btn-menu">Rejoindre une partie</button>
+        </a>
+    </div>
+</body>
+</html>
