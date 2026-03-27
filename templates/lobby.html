@@ -12,20 +12,37 @@
     <h1>Lobby</h1>
     <div class="flex-col">
         <div class="flex-row grow-1">
-            <div class="flex-col grow-1">
+            <div class="flex-col grow-1 margin-medium">
                 <h2>Participants</h2>
-                <div class="flex-row grow-1">
+                <div class="flex-row flex-wrap grow-1">
                     {% for j in joueurs %}
-                        {{ player(j.pseudo, j.pret) }}
+                        {{ player(j.pseudo, j.est_pret, j.est_host) }}
                     {% else %}
                         <p>En attente de joueurs...</p>
                     {% endfor %}
                 </div>
             </div>
-            <div class="flex-col grow-1">
+            <div class="barre"></div>
+            <div class="flex-col grow-1 margin-medium">
                 <h2>Paramètres</h2>
 
+                <h3>Niveau</h3>
+                <div class="flex-row flex-wrap grow-1">
+                    {% for j in joueurs %}
+                        {{ player(j.pseudo, j.est_pret, j.est_host) }}
+                    {% endfor %}
+                </div>
+
+                <h3>Difficulté</h3>
+                <div class="flex-row flex-wrap grow-1">
+                    {% for j in joueurs %}
+                        {{ player(j.pseudo, j.est_pret, j.est_host) }}
+                    {% endfor %}
+                </div>
             </div>
+        </div>
+        <div class="flex-row grow-1 jc-between">
+
         </div>
     </div>
 </body>

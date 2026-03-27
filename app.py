@@ -15,7 +15,23 @@ def creerPartie():
         {"pseudo": "Player_Two", "est_pret": False},
         {"pseudo": "Melomane", "est_pret": True}
     ]
-    return render_template('lobby.html', joueurs=liste_joueurs, code="ABCDEF")
+
+    liste_diff = [
+        {"label": "Difficile", "icone": "player", "code": "difficile" },
+        {"label": "Normal", "icone": "player", "code": "normal" },
+        {"label": "Facile", "icone": "player", "code": "facile" },
+    ]
+
+    liste_niv = [
+        {"label": "Avec partition et son", "icone": "player", "code": "avecpartson" },
+        {"label": "Sans son", "icone": "player", "code": "sansson" },
+        {"label": "Sans partition", "icone": "player", "code": "sanspart" },
+    ]
+    return render_template('lobby.html',
+                           joueurs=liste_joueurs,
+                           difficultes=liste_diff,
+                           niveaux=liste_niv,
+                           code="ABCDEF")
 
 @app.route('/connexionRoom')
 def connexionRoom():
