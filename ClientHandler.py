@@ -15,7 +15,6 @@ class ClientHandler:
         self.running = True
         self.room: Optional[Room] = None
         self.client_name = None
-        self.requestDispatcher = RequestDispatcher()
 
     def handle(self):
         framer = SocketFramer(self.socket)
@@ -39,10 +38,10 @@ class ClientHandler:
         self.dispatch(cmd=cmd, args=args)
 
     def dispatch(self, cmd, args):
-        handler = self.requestDispatcher.handlers.get(cmd)
+        handler = RequestDispatcher.handlers.get(cmd)
 
         if handler:
-            handler(args)
+            handler(self, args)
         else:
             self.send({"type": "error", "msg": "Unknown command"})
 

@@ -10,6 +10,9 @@ CR ## : Créer une salle - Nom Joueur
 RR ## ## : Rejoindre une salle - Numéro de salle - Nom Joueur
 PR : Récuperer les joueurs dans la salle
 LR : Partir de la salle
+LD : Récupérer la difficulté de la partition de la salle
+LT : Récupérer les styles musicaux de la salle
+LL : Récupérer le niveau de la salle
 
 -- Commande Gestion de partie (admin)
 SG : Démarrer la partie
