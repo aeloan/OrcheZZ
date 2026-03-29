@@ -1,68 +1,33 @@
 import socket
-from typing import Optional
+from typing import Optional, Callable
 
-from RequestDispatcher import RequestDispatcher
+from ClientRequestDispatcher import ClientRequestDispatcher
 from Room import Room
+from common.BaseHandler import BaseHandler
 from common.SockerFramer import SocketFramer
 
 
-class ClientHandler:
+class ClientHandler(BaseHandler):
     def __init__(self, socket: socket.socket, address: str, manager):
-        self.socket = socket
+        super().__init__(socket)
         self.address = address
         self.manager = manager
-        self.running = True
         self.room: Optional[Room] = None
         self.client_name = None
 
-    def handle(self):
-        framer = SocketFramer(self.socket)
-
-        while self.running:
-            try:
-                raw_msg = framer.read_message()
-                message = raw_msg.decode()
-                self.process_message(message)
-            except Exception as e:
-                print(f"Erreur client {self.address}: {e}")
-                break
-
-        self.close()
-
-    def process_message(self, message: str):
-        parts = message.split()
-        cmd = parts[0]
-        args = parts[1:]
-
-        self.dispatch(cmd=cmd, args=args)
-
-    def dispatch(self, cmd, args):
-        handler = RequestDispatcher.handlers.get(cmd)
-
-        if handler:
-            handler(self, args)
-        else:
-            self.send({"type": "error", "msg": "Unknown command"})
-
-
-    def send(self, message: str):
-        framer = SocketFramer(self.socket)
-
-        try:
-            self.socket.send(framer.write_message(message.encode()))
-        except Exception as e:
-            print(f"Erreur send {self.address} : {e}")
-            self.close()
+    def get_dispatcher(self) -> dict[str, Callable]:
+        return ClientRequestDispatcher.handlers
 
     def close(self):
-        if self.running:
-            self.running = False
-            self.socket.close()
-            self.manager.remove_client(self)
-            self.manager = None
+        super().close()
+        self.manager.remove_client(self)
+        self.leave_room()
+        self.manager = None
 
     def set_room(self, room: Room):
         self.room = room
 
     def leave_room(self):
-        self.room = None
+        if self.room:
+            self.room.remove_player(self)
+            self.room = None

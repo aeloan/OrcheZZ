@@ -1,13 +1,14 @@
 from flask import Flask, render_template
 
-from Server import Server
+from Server import ServerHandler
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    client = Server("localhost", 8888)
+    client = ServerHandler("localhost", 8888)
     client.connect()
+    client.send("RR")
     return render_template('index.html')
 
 @app.route('/creer-partie')

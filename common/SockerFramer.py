@@ -26,6 +26,7 @@ class SocketFramer:
         self.buffer = self.buffer[size:]
         return message
 
-    def write_message(self, message: bytes):
+    @staticmethod
+    def write_message(message: bytes) -> bytes:
         header = f"{len(message)}\n".encode()
-        self.sock.sendall(header + message)
+        return header + message
