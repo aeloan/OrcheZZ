@@ -7,9 +7,11 @@ from front.ServerRequestDispatcher import ServerRequestDispatcher
 
 
 class ServerHandler(BaseHandler):
-    def __init__(self, host: str, port: int):
+    def __init__(self, host: str, port: int, sid, socketio):
         self.host = host
         self.port = port
+        self.sid = sid
+        self.socketio = socketio
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         super().__init__(self.socket)
 

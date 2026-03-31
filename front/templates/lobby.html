@@ -1,49 +1,41 @@
-{% from 'components/_player.html' import player %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Orchezz - Lobby</title>
-</head>
-<body>
-    <h1>Lobby</h1>
-    <div class="flex-col">
-        <div class="flex-row grow-1">
-            <div class="flex-col grow-1 margin-medium">
-                <h2>Participants</h2>
-                <div class="flex-row flex-wrap grow-1">
-                    {% for j in joueurs %}
-                        {{ player(j.pseudo, j.est_pret, j.est_host) }}
-                    {% else %}
-                        <p>En attente de joueurs...</p>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="barre"></div>
-            <div class="flex-col grow-1 margin-medium">
-                <h2>Paramètres</h2>
+{% extends "base.html" %}
 
-                <h3>Niveau</h3>
-                <div class="flex-row flex-wrap grow-1">
-                    {% for j in joueurs %}
-                        {{ player(j.pseudo, j.est_pret, j.est_host) }}
-                    {% endfor %}
-                </div>
-
-                <h3>Difficulté</h3>
-                <div class="flex-row flex-wrap grow-1">
-                    {% for j in joueurs %}
-                        {{ player(j.pseudo, j.est_pret, j.est_host) }}
-                    {% endfor %}
-                </div>
+{% block content %}
+<h1>Lobby</h1>
+<div class="flex-col">
+    <div class="flex-row grow-1">
+        <div class="flex-col grow-1 margin-medium">
+            <h2>Participants</h2>
+            <div class="flex-row flex-wrap grow-1">
+                {% for j in joueurs %}
+                    {{ player(j.pseudo, j.est_pret, j.est_host) }}
+                {% else %}
+                    <p>En attente de joueurs...</p>
+                {% endfor %}
             </div>
         </div>
-        <div class="flex-row grow-1 jc-between">
+        <div class="barre"></div>
+        <div class="flex-col grow-1 margin-medium">
+            <h2>Paramètres</h2>
 
+            <h3>Niveau</h3>
+            <div class="flex-row flex-wrap grow-1">
+                {% for j in joueurs %}
+                    {{ player(j.pseudo, j.est_pret, j.est_host) }}
+                {% endfor %}
+            </div>
+
+            <h3>Difficulté</h3>
+            <div class="flex-row flex-wrap grow-1">
+                {% for j in joueurs %}
+                    {{ player(j.pseudo, j.est_pret, j.est_host) }}
+                {% endfor %}
+            </div>
         </div>
     </div>
-</body>
-</html>
+    <div class="flex-row grow-1 jc-between">
+
+    </div>
+</div>
+{% endblock %}

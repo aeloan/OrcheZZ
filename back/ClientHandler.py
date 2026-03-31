@@ -4,7 +4,6 @@ from typing import Optional, Callable
 from ClientRequestDispatcher import ClientRequestDispatcher
 from Room import Room
 from common.BaseHandler import BaseHandler
-from common.SockerFramer import SocketFramer
 
 
 class ClientHandler(BaseHandler):
