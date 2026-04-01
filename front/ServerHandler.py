@@ -1,4 +1,5 @@
 import socket
+import time
 from typing import Callable
 
 from common.BaseHandler import BaseHandler
@@ -13,6 +14,7 @@ class ServerHandler(BaseHandler):
         self.sid = sid
         self.socketio = socketio
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.last_activity = time.time()
         super().__init__(self.socket)
 
     def connect(self):
@@ -23,3 +25,7 @@ class ServerHandler(BaseHandler):
 
     def get_dispatcher(self) -> dict[str, Callable]:
         return ServerRequestDispatcher.handlers
+
+    def send(self, message: str):
+        self.last_activity = time.time()
+        super().send(message)

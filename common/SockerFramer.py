@@ -8,18 +8,21 @@ class SocketFramer:
 
     def read_message(self) -> bytes:
         while b"\n" not in self.buffer:
-            data = self.sock.recv(self.bufferSize)
-            if not data:
-                raise ConnectionError("Socket closed")
+            try:
+                data = self.sock.recv(self.bufferSize)
+            except ConnectionError as c:
+                raise c
             self.buffer += data
 
         header, self.buffer = self.buffer.split(b"\n", 1)
         size = int(header.decode())
 
         while len(self.buffer) < size:
-            data = self.sock.recv(self.bufferSize)
-            if not data:
-                raise ConnectionError("Socket closed")
+            try:
+                data = self.sock.recv(self.bufferSize)
+            except ConnectionResetError as c:
+                raise c
+
             self.buffer += data
 
         message = self.buffer[:size]

@@ -19,9 +19,11 @@ class ClientHandler(BaseHandler):
 
     def close(self):
         super().close()
-        self.manager.remove_client(self)
+        if self.manager:
+            self.manager.remove_client(self)
+            self.manager = None
         self.leave_room()
-        self.manager = None
+
 
     def set_room(self, room: Room):
         self.room = room

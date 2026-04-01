@@ -27,6 +27,16 @@ const token = getOrCreateToken();
 
 // Connexion WebSocket avec token
 const socket = io.connect("/", { query: { token } });
+
+socket.on("timeout", () => {
+    alert("Déconnecté pour inactivité");
+});
+
+socket.on("invalidate_token", () => {
+    localStorage.removeItem("user_token");
+    window.location.href = "/";
+});
+
 </script>
 
 </body>

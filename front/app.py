@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 
@@ -28,20 +30,17 @@ def handle_connect():
         client.connect()
         clients[token] = client
 
-#
-# @socketio.on('disconnect')
-# def handle_disconnect():
-#     print("Client déconnecté")
-#
-#     client = clients.pop(request.sid, None)
-#     if client:
-#         client.close()
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    token = request.args.get("token")
+    cleanup_client(token)
 
 
 # 👉 Exemple : créer une room
 @socketio.on('RR')
 def create_room():
-    client = clients.get(request.sid)
+    client = clients.get(request.args.get("token"))
     if client:
         client.send("RR")
 
@@ -49,7 +48,7 @@ def create_room():
 # 👉 Exemple : rejoindre une room
 @socketio.on('join_room')
 def join_room(data):
-    client = clients.get(request.sid)
+    client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
         pseudo = data["pseudo"]
@@ -79,5 +78,33 @@ def connexionRoom():
 # RUN
 # ========================
 
+def cleanup_client(token):
+    client = clients.pop(token)
+    if client:
+        client.close()
+        socketio.emit("invalidate_token")
+        del client
+
+
+def inactivity_watcher():
+    TIMEOUT = 600  # secondes
+
+    while True:
+        now = time.time()
+
+        for token, client in list(clients.items()):
+            if now - client.last_activity > TIMEOUT:
+                print(f"Client {token} timeout")
+
+                try:
+                    socketio.emit("timeout")
+                    cleanup_client(token)
+                except:
+                    pass
+
+        socketio.sleep(10)
+
+
 if __name__ == '__main__':
+    socketio.start_background_task(inactivity_watcher)
     socketio.run(app, debug=True, allow_unsafe_werkzeug=True)

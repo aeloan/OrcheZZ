@@ -21,6 +21,9 @@ class BaseHandler(ABC):
                 raw_msg = self.framer.read_message()
                 message = raw_msg.decode()
                 self.process_message(message)
+            except ConnectionResetError:
+                print(f"Client déconnecté")
+                break
             except Exception as e:
                 print(f"Erreur : {e}")
                 break
