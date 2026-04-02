@@ -37,6 +37,14 @@ def handle_disconnect():
     cleanup_client(token)
 
 
+@socketio.on("audio_chunk")
+def handle_audio_chunk(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        audio_bytes = bytes(data)
+        client.send(b"AU " + audio_bytes)
+
+
 # 👉 Exemple : créer une room
 @socketio.on('RR')
 def create_room():
@@ -56,7 +64,7 @@ def join_room(data):
 
 
 # ========================
-# ROUTES (UNIQUEMENT HTML)
+# ROUTES
 # ========================
 
 @app.route('/')

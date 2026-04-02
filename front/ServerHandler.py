@@ -26,6 +26,6 @@ class ServerHandler(BaseHandler):
     def get_dispatcher(self) -> dict[str, Callable]:
         return ServerRequestDispatcher.handlers
 
-    def send(self, message: str):
+    def send(self, message: str | bytes):
         self.last_activity = time.time()
         super().send(message)

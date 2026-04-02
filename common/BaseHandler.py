@@ -19,8 +19,14 @@ class BaseHandler(ABC):
         while self.running:
             try:
                 raw_msg = self.framer.read_message()
-                message = raw_msg.decode()
-                self.process_message(message)
+                if raw_msg.startswith(b"AU "):
+                    parts = raw_msg.split(b" ", 1)
+                    cmd = 'AU'
+                    args = parts[1]
+
+                    self.dispatch(cmd=cmd, args=args)
+                else:
+                    self.process_message(raw_msg.decode())
             except ConnectionResetError:
                 print(f"Client déconnecté")
                 break
@@ -45,9 +51,11 @@ class BaseHandler(ABC):
         else:
             self.send(str({"type": "error", "msg": "Unknown command"}))
 
-    def send(self, message: str):
+    def send(self, message: str | bytes):
         try:
-            framed_message = SocketFramer.write_message(message.encode())
+            if isinstance(message, str):
+                message = message.encode()
+            framed_message = SocketFramer.write_message(message)
             self.socket.send(framed_message)
         except Exception as e:
             print(f"Erreur send : {e}")

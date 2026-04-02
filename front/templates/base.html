@@ -37,6 +37,50 @@ socket.on("invalidate_token", () => {
     window.location.href = "/";
 });
 
+function startRecording() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+        const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        const chunks = [];
+
+        mediaRecorder.ondataavailable = function(e) {
+            if (e.data.size > 0) {
+                chunks.push(e.data);
+            }
+        };
+
+        mediaRecorder.onstop = function() {
+            // Créer un Blob avec tout l'audio
+            const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+
+            // Lire en ArrayBuffer pour envoyer en bytes
+            const reader = new FileReader();
+            reader.onload = function() {
+                const buffer = reader.result;
+                const bytes = Array.from(new Uint8Array(buffer));
+
+                // Envoyer via Socket.IO
+                socket.emit("audio_chunk", bytes);
+            };
+            reader.readAsArrayBuffer(audioBlob);
+        };
+
+        // Démarre l'enregistrement
+        mediaRecorder.start();
+
+        // Arrête automatiquement après 10 secondes
+        setTimeout(() => {
+            mediaRecorder.stop();
+        }, 10000);
+    })
+    .catch(err => console.error("Erreur accès micro :", err));
+}
+
+startRecording()
+
+
+
+
 </script>
 
 </body>
