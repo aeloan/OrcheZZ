@@ -1,3 +1,5 @@
+import random
+import string
 import threading
 
 
@@ -5,6 +7,9 @@ class Room:
     def __init__(self, admin):
         self.admin = admin
         self.players = [admin]
+        self.admin.manager.rooms.add(self)
+        choices = string.ascii_letters + string.digits
+        self.code = ''.join(random.choice(choices) for i in range(5))
         self.running = False
 
     def add_player(self, client):
