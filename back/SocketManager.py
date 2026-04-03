@@ -19,13 +19,10 @@ class SocketManager:
         while True:
             print("Attente d'un nouveau client...")
             client_socket, addr = self.server_socket.accept()
-
             client = ClientHandler(client_socket, addr, self)
             print(f"Nouveau client : {client.address}")
             self.clients.append(client)
-
-            thread = threading.Thread(target=client.handle)
-            thread.start()
+            client.start()
 
     def broadcast(self, message: dict, sender):
         for client in self.clients:
