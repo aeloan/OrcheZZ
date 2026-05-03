@@ -10,6 +10,11 @@
     border-radius: 20%
 }
 
+.param-card {
+    border: 2px solid;
+    border-radius: 15px;
+}
+
 .text-green {
     color: #00561b;
 }
@@ -20,4 +25,8 @@
 
 .barre {
     border: 2px solid,
+}
+
+.show-part, .show-param {
+    width: 50%;
 }

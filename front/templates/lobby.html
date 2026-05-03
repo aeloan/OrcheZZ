@@ -1,13 +1,16 @@
 
 {% extends "base.html" %}
 
+{% from 'components/_player.html' import player %}
+{% from 'components/_param.html' import param %}
+
 {% block content %}
 <h1>Lobby</h1>
 <div class="flex-col">
     <div class="flex-row grow-1">
-        <div class="flex-col grow-1 margin-medium">
+        <div class="show-part flex-col margin-medium">
             <h2>Participants</h2>
-            <div class="flex-row flex-wrap grow-1">
+            <div class="flex-row flex-wrap basis-none">
                 {% for j in joueurs %}
                     {{ player(j.pseudo, j.est_pret, j.est_host) }}
                 {% else %}
@@ -16,26 +19,50 @@
             </div>
         </div>
         <div class="barre"></div>
-        <div class="flex-col grow-1 margin-medium">
+        <div class="show-param flex-col margin-medium basis-none">
             <h2>Paramètres</h2>
 
             <h3>Niveau</h3>
-            <div class="flex-row flex-wrap grow-1">
-                {% for j in joueurs %}
-                    {{ player(j.pseudo, j.est_pret, j.est_host) }}
+            <div class="flex-row flex-wrap">
+                {% for n in niveaux %}
+                    {{ param(n.label, n.code) }}
                 {% endfor %}
             </div>
 
             <h3>Difficulté</h3>
-            <div class="flex-row flex-wrap grow-1">
-                {% for j in joueurs %}
-                    {{ player(j.pseudo, j.est_pret, j.est_host) }}
+            <div class="flex-row flex-wrap">
+                {% for d in difficultes %}
+                    {{ param(d.label, d.code) }}
                 {% endfor %}
             </div>
         </div>
     </div>
     <div class="flex-row grow-1 jc-between">
-
+        <span id="room-code"></span>
+        <button id="btn-lancer" class="btn-menu">Lancer</button>
     </div>
 </div>
+
+<script>
+
+    const socket = io.connect("/", { query: { token: getOrCreateToken() } });
+
+    socket.on("connect", () => {
+        console.log("Connecté au socket !");
+        // Si on est sur la page de création, on demande au serveur de créer la salle
+        if (window.location.pathname === "/creer-partie") {
+            socket.emit("CR");
+        }
+    });
+
+    socket.on("RR", (data) => {
+        console.log("Code reçu du serveur TCP :", data.code);
+
+        // On met à jour l'affichage dynamiquement
+        const codeElement = document.getElementById("room-code");
+        if (codeElement) {
+            codeElement.innerText = data.code;
+        }
+    });
+</script>
 {% endblock %}

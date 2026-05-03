@@ -3,11 +3,22 @@
 {% block content %}
     <div class="game-launcher flex-col flex-center">
         <h1>Orchezz</h1>
-        <a href="{{ url_for('creerPartie') }}">
-            <button class="btn-menu">Créer une partie</button>
-        </a>
-        <a href="{{ url_for('connexionRoom') }}">
-            <button class="btn-menu">Rejoindre une partie</button>
-        </a>
+
+        <button id="btn-creer" class="btn-menu">Créer une partie</button>
+        <button id="btn-rejoindre" class="btn-menu">Rejoindre une partie</button>
     </div>
+
+    <script>
+        // On récupère le token via la fonction définie dans base.html
+        const userToken = getOrCreateToken();
+
+        document.getElementById('btn-creer').onclick = function() {
+            console.log("créer room");
+            window.location.href = "{{ url_for('creerPartie') }}?token=" + userToken;
+        };
+
+        document.getElementById('btn-rejoindre').onclick = function() {
+            window.location.href = "{{ url_for('connexionRoom') }}?token=" + userToken;
+        };
+    </script>
 {% endblock %}

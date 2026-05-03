@@ -46,11 +46,11 @@ def handle_audio_chunk(data):
 
 
 # 👉 Exemple : créer une room
-@socketio.on('RR')
+@socketio.on('CR')
 def create_room():
     client = clients.get(request.args.get("token"))
     if client:
-        client.send("RR")
+        client.send("CR")
 
 
 # 👉 Exemple : rejoindre une room
@@ -74,7 +74,24 @@ def home():
 
 @app.route('/creer-partie')
 def creerPartie():
-    return render_template('lobby.html')
+    liste_joueurs = [
+        {"pseudo": "Annabella", "est_pret": True, "est_host": True},
+        {"pseudo": "Player_Two", "est_pret": False},
+        {"pseudo": "Melomane", "est_pret": True}
+    ]
+
+    liste_diff = [
+        {"label": "Difficile", "code": "difficile"},
+        {"label": "Normal", "code": "normal"},
+        {"label": "Facile", "code": "facile"},
+    ]
+
+    liste_niv = [
+        {"label": "Avec partition et son", "code": "avecpartson"},
+        {"label": "Sans son", "code": "sansson"},
+        {"label": "Sans partition", "code": "sanspart"},
+    ]
+    return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv)
 
 
 @app.route('/connexionRoom')
