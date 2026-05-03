@@ -15,10 +15,46 @@ class ServerRequestDispatcher:
         print(f"Rejoindre salle avec args: {args}")
         client.socketio.emit("join_room", args, to=client.sid)
 
+    @staticmethod
+    def handle_leave_room(client, args):
+        print(f"Quitter la salle avec args: {args}")
+        client.socketio.emit("quit_room", args, to=client.sid)
+
+    @staticmethod
+    def handle_get_players_in_room(client, args):
+        print(f"Récupération des joueurs dans la salle avec args: {args}")
+        client.socketio.emit("get_players", args, to=client.sid)
+
+    @staticmethod
+    def handle_get_difficulty(client, args):
+        print(f"Récupération de la difficulté de la salle avec args: {args}")
+        client.socketio.emit("get_diff", args, to=client.sid)
+
+    @staticmethod
+    def handle_get_niveau(client, args):
+        print(f"Récupération du niveau de la salle avec args: {args}")
+        client.socketio.emit("get_niveau", args, to=client.sid)
+
+    @staticmethod
+    def handle_set_difficulty(client, args):
+        print(f"Changement de la difficulté de la salle avec args: {args}")
+        client.socketio.emit("set_diff", args, to=client.sid)
+
+    @staticmethod
+    def handle_set_niveau(client, args):
+        print(f"Changement du niveau de la salle avec args: {args}")
+        client.socketio.emit("set_niveau", args, to=client.sid)
 
 ServerRequestDispatcher.handlers = {
     "CR": ServerRequestDispatcher.handle_create_room,
-    "RR": ServerRequestDispatcher.handle_join_room
+    "RR": ServerRequestDispatcher.handle_join_room,
+    "LR": ServerRequestDispatcher.handle_leave_room,
+    "PR": ServerRequestDispatcher.handle_get_players_in_room,
+    "LD": ServerRequestDispatcher.handle_get_difficulty,
+    "LL": ServerRequestDispatcher.handle_get_niveau,
+    "AD": ServerRequestDispatcher.handle_set_difficulty,
+    "AL": ServerRequestDispatcher.handle_set_niveau,
+
 }
 
 ### TEST

@@ -45,7 +45,6 @@ def handle_audio_chunk(data):
         client.send(b"AU " + audio_bytes)
 
 
-# 👉 Exemple : créer une room
 @socketio.on('CR')
 def create_room():
     client = clients.get(request.args.get("token"))
@@ -53,8 +52,7 @@ def create_room():
         client.send("CR")
 
 
-# 👉 Exemple : rejoindre une room
-@socketio.on('join_room')
+@socketio.on('RR')
 def join_room(data):
     client = clients.get(request.args.get("token"))
     if client:
@@ -62,6 +60,47 @@ def join_room(data):
         pseudo = data["pseudo"]
         client.send(f"RR {room_id} {pseudo}")
 
+@socketio.on('LR')
+def leave_room(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        room_id = data["room_id"]
+        client.send(f"LR {room_id}")
+
+@socketio.on('PR')
+def get_players_in_room(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        room_id = data["room_id"]
+        client.send(f"PR {room_id}")
+
+@socketio.on('LD')
+def get_difficulty(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        room_id = data["room_id"]
+        client.send(f"LD {room_id}")
+
+@socketio.on('LL')
+def get_niveau(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        room_id = data["room_id"]
+        client.send(f"LL {room_id}")
+
+@socketio.on('AD')
+def set_difficulty(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        room_id = data["room_id"]
+        client.send(f"LD {room_id}")
+
+@socketio.on('AL')
+def set_niveau(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        room_id = data["room_id"]
+        client.send(f"LL {room_id}")
 
 # ========================
 # ROUTES
@@ -74,29 +113,39 @@ def home():
 
 @app.route('/creer-partie')
 def creerPartie():
+    pseudo = request.args.get("pseudo")
     liste_joueurs = [
-        {"pseudo": "Annabella", "est_pret": True, "est_host": True},
-        {"pseudo": "Player_Two", "est_pret": False},
-        {"pseudo": "Melomane", "est_pret": True}
+        {"pseudo": pseudo, "est_pret": True, "est_host": True},
     ]
 
     liste_diff = [
-        {"label": "Difficile", "code": "difficile"},
-        {"label": "Normal", "code": "normal"},
-        {"label": "Facile", "code": "facile"},
+        {"id": "1", "label": "Difficile", "code": "difficile"},
+        {"id": "2", "label": "Normal", "code": "normal"},
+        {"id": "3", "label": "Facile", "code": "facile"},
     ]
 
     liste_niv = [
-        {"label": "Avec partition et son", "code": "avecpartson"},
-        {"label": "Sans son", "code": "sansson"},
-        {"label": "Sans partition", "code": "sanspart"},
+        {"id": "1", "label": "Avec partition et son", "code": "part_son"},
+        {"id": "2", "label": "Sans son", "code": "part"},
+        {"id": "3", "label": "Sans partition", "code": "son"},
     ]
-    return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv)
+
+    return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv, isCreation=True)
 
 
 @app.route('/connexionRoom')
 def connexionRoom():
-    return render_template('temp.html')
+    return render_template('join_room.html', pseudo=request.args.get("pseudo"))
+
+
+@app.route('/join-partie')
+def joinPartie():
+    pseudo = request.args.get("pseudo")
+    liste_joueurs = [
+        {"pseudo": pseudo, "est_pret": True, "est_host": False},
+    ]
+
+    return render_template('lobby.html', joueurs=liste_joueurs, difficultes=[], niveaux=[], isCreation=False)
 
 
 # ========================

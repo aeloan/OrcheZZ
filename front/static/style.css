@@ -30,3 +30,12 @@
 .show-part, .show-param {
     width: 50%;
 }
+
+.label-txtbox {
+    margin-right: 10px;
+}
+
+.btn-param.active {
+    background-color: black;
+    color: white;
+}

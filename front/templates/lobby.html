@@ -10,7 +10,7 @@
     <div class="flex-row grow-1">
         <div class="show-part flex-col margin-medium">
             <h2>Participants</h2>
-            <div class="flex-row flex-wrap basis-none">
+            <div class="flex-row flex-wrap basis-none list-players">
                 {% for j in joueurs %}
                     {{ player(j.pseudo, j.est_pret, j.est_host) }}
                 {% else %}
@@ -18,51 +18,147 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="barre"></div>
-        <div class="show-param flex-col margin-medium basis-none">
-            <h2>Paramètres</h2>
+        {% if isCreation %}
+            <div class="barre"></div>
+            <div class="show-param flex-col margin-medium basis-none">
+                <h2>Paramètres</h2>
 
-            <h3>Niveau</h3>
-            <div class="flex-row flex-wrap">
-                {% for n in niveaux %}
-                    {{ param(n.label, n.code) }}
-                {% endfor %}
-            </div>
+                <h3>Niveau</h3>
+                <div class="flex-row flex-wrap container-niveau">
+                    {% for n in niveaux %}
+                        {{ param(n.id, n.label, n.code, "niveau") }}
+                    {% endfor %}
+                </div>
 
-            <h3>Difficulté</h3>
-            <div class="flex-row flex-wrap">
-                {% for d in difficultes %}
-                    {{ param(d.label, d.code) }}
-                {% endfor %}
+                <h3>Difficulté</h3>
+                <div class="flex-row flex-wrap container-difficulte">
+                    {% for d in difficultes %}
+                        {{ param(d.id, d.label, d.code, "difficulte") }}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
     <div class="flex-row grow-1 jc-between">
+        <button id="btn-quitter" class="btn-menu">Quitter</button>
         <span id="room-code"></span>
         <button id="btn-lancer" class="btn-menu">Lancer</button>
     </div>
 </div>
 
 <script>
+    var roomId = null;
 
-    const socket = io.connect("/", { query: { token: getOrCreateToken() } });
+    debugger;
+    var socket = io.connect("/", { query: { token: getOrCreateToken() } });
 
     socket.on("connect", () => {
         console.log("Connecté au socket !");
         // Si on est sur la page de création, on demande au serveur de créer la salle
         if (window.location.pathname === "/creer-partie") {
-            socket.emit("CR");
+            socket.emit("CR " + {{ joueurs[0].pseudo }});
         }
     });
 
-    socket.on("RR", (data) => {
-        console.log("Code reçu du serveur TCP :", data.code);
+    socket.on("create_room", (data) => {
+        console.log("Code reçu du serveur TCP :", data[0]);
+
+        debugger;
+        roomId = data[0];
 
         // On met à jour l'affichage dynamiquement
         const codeElement = document.getElementById("room-code");
         if (codeElement) {
-            codeElement.innerText = data.code;
+            codeElement.innerText = data[0];
         }
     });
+
+    socket.on("join_room", (data) => {
+        roomId = data[0];
+        socket.emit("PR " + roomId);
+    });
+
+    socket.on("get_players", (data) => {
+        let listPlayer = data[0].split('.');
+
+        const container = document.querySelector(".list-players");
+
+        if (container && listPlayer.length > 0 && listPlayer[0] !== "") {
+            container.innerHTML = "";
+
+            let i = 0;
+            listPlayer.forEach(playerData => {
+
+                const iconSrc = (i === 0)
+                    ? "/static/image/player-crown.svg"
+                    : "/static/image/player.svg";
+
+                const playerHtml = `
+                    <div class="flex-col ai-center player-card margin-small padding-medium
+                        jc-between p-2 bg-dark rounded gap-2 basis-none">
+                        <div class="flex-col ai-center jc-center gap-1">
+                            <img src="${iconSrc}" style="width: 48px; height: 48px;">
+                            <span class="text-white">${pseudo}</span>
+                        </div>
+                    </div>
+                `;
+                i++;
+            });
+        } else if (container) {
+            container.innerHTML = "<p>En attente de joueurs...</p>";
+        }
+    });
+
+    socket.on("quit_room", (data) => {
+        window.location.href = "/";
+    });
+
+    socket.on("set_diff", (data) => {
+        let btndiff = document.querySelector(`[data-categorie="difficulte"][data-id="${data[0]}"]`);
+
+        btndiff.classList.add("active");
+    });
+
+    socket.on("set_niveau", (data) => {
+        let btnniv = document.querySelector(`[data-categorie="niveau"][data-id="${data[0]}"]`);
+
+        btnniv.classList.add("active");
+    });
+
+    document.getElementById('btn-quitter').onclick = function() {
+        console.log("leave room");
+        debugger;
+
+        socket.emit("LR " + roomId + {{ joueurs[0].pseudo }} );
+    };
+
+    document.querySelectorAll('.container-niveau .btn-param').forEach(btn => {
+        btn.onclick = function(e) {
+            console.log("change niveau");
+
+            const valCode = this.dataset.id;
+
+            let btns = document.querySelectorAll('button[data-categorie="niveau"]');
+            btns.forEach(b => b.classList.remove("active"));
+
+            socket.emit("AL " + roomId + " " + valCode);
+        };
+    });
+
+    document.querySelectorAll('.container-difficulte .btn-param').forEach(btn => {
+        btn.onclick = function(e) {
+            console.log("change difficulte");
+
+            const valCode = this.dataset.id;
+
+            let btns = document.querySelectorAll('button[data-categorie="difficulte"]');
+            btns.forEach(b => b.classList.remove("active"));
+
+            socket.emit("AD " + roomId + " " + valCode);
+        };
+    });
+
+
+
 </script>
 {% endblock %}

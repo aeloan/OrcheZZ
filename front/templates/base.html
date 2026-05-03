@@ -27,7 +27,7 @@
 const token = getOrCreateToken();
 
 // Connexion WebSocket avec token
-const socket = io.connect("/", { query: { token } });
+var socket = io.connect("/", { query: { token } });
 
 socket.on("timeout", () => {
     alert("Déconnecté pour inactivité");
