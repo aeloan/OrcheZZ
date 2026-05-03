@@ -31,7 +31,7 @@ EG : Fin de partie
 Syntaxe de réception :
 [TAILLE]\n[CODE COMMANDE] [ARGS]
 
-RR ## : Nouveau joueur qui rejoint la salle - Joueur
+RR ## : Nouveau joueur qui rejoint la salle - Joueur 
 
 LD ## : Récupérer la difficulté de la partition de la salle - Difficulté
 LT ##+ : Récupérer les styles musicaux de la salle - Style1 Style2 ...
