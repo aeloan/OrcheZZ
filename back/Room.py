@@ -1,3 +1,5 @@
+import random
+import string
 import threading
 
 
@@ -5,10 +7,16 @@ class Room:
     def __init__(self, admin):
         self.admin = admin
         self.players = [admin]
+        self.admin.manager.rooms.add(self)
+        choices = string.ascii_letters + string.digits
+        self.code = ''.join(random.choice(choices) for i in range(5))
         self.running = False
+        self.difficulty = 0
+        self.level = 0
 
     def add_player(self, client):
         self.players.append(client)
+        client.set_room(self)
 
     def remove_player(self, client):
         if client in self.players:
@@ -31,3 +39,11 @@ class Room:
     def send_room(self, state):
         for p in self.players:
             p.send(state)
+
+    def set_difficulty(self, client_caller, difficulty_code):
+        if self.admin == client_caller:
+            self.difficulty = difficulty_code
+
+    def set_level(self, client_caller, level_code):
+        if self.admin == client_caller:
+            self.level = level_code

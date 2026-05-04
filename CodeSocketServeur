@@ -1,4 +1,4 @@
-Syntaxe :
+Syntaxe de retour :
 [TAILLE]\nACK_[CODE COMMANDE] [ARGS]    : Succès
 [TAILLE]\nERR_[CODE COMMANDE] [ARGS]    : Erreur
 
@@ -18,13 +18,21 @@ LL ## : Récupérer le niveau de la salle - Niveau
 -- Commande Gestion de partie (admin)
 SG : Démarrer la partie
 AD ## : Ajouter la difficulté de la partition- Code difficulté
-DD ## : Supprimer la difficulté de la partition - Code difficulté
 AS ##: Ajouter un style musical - Code style
 DS ## : Supprimer un style musical - Code style
 AL ##: Ajouter le niveau - Code niveau
-DL ## : Supprimer le niveau - Code niveau
 
 -- Cours du jeu
 SR ## : Résultat de la manche - Score
 AR ## : Audio final de la manche - Audio MP3
 EG : Fin de partie
+
+
+Syntaxe de réception :
+[TAILLE]\n[CODE COMMANDE] [ARGS]
+
+RR ## : Nouveau joueur qui rejoint la salle - Joueur 
+
+LD ## : Récupérer la difficulté de la partition de la salle - Difficulté
+LT ##+ : Récupérer les styles musicaux de la salle - Style1 Style2 ...
+LL ## : Récupérer le niveau de la salle - Niveau
