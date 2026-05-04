@@ -1,8 +1,8 @@
 import socket
 from typing import Optional, Callable
 
-from ClientRequestDispatcher import ClientRequestDispatcher
-from Room import Room
+from back.ClientRequestDispatcher import ClientRequestDispatcher
+from back.Room import Room
 from common.BaseHandler import BaseHandler
 
 

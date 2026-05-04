@@ -67,3 +67,7 @@
 .padding-large {
     padding: 15px 20px;
 }
+
+.no-display {
+    display: none;
+}

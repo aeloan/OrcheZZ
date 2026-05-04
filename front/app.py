@@ -46,10 +46,11 @@ def handle_audio_chunk(data):
 
 
 @socketio.on('CR')
-def create_room():
+def create_room(data):
     client = clients.get(request.args.get("token"))
     if client:
-        client.send("CR")
+        pseudo = data.get("pseudo", "Player") if data else "Player"
+        client.send(f"CR {pseudo}")
 
 
 @socketio.on('RR')
@@ -93,14 +94,16 @@ def set_difficulty(data):
     client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
-        client.send(f"LD {room_id}")
+        difficulty = data["difficulty"]
+        client.send(f"AD {room_id} {difficulty}")
 
 @socketio.on('AL')
 def set_niveau(data):
     client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
-        client.send(f"LL {room_id}")
+        level = data["level"]
+        client.send(f"AL {room_id} {level}")
 
 # ========================
 # ROUTES

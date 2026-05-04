@@ -5,8 +5,8 @@
     <h1>Rejoindre une partie</h1>
     <div class="flex-col grow-1 jc-center ai-center padding-large">
         <div class="flex-row">
-          <label class="label-txtbox" for="txtbox-code">Code:</label>
-          <input type="text" id="txtbox-code" name="txtbox-code">
+            <label class="label-txtbox" for="txtbox-code">Code:</label>
+            <input type="text" id="txtbox-code" name="txtbox-code">
         </div>
 
         <button id="btn-valider" class="btn-menu padding-medium">Valider</button>
@@ -21,14 +21,14 @@
 
         socket.on("join_room", (data) => {
             debugger;
-            window.location.href = "{{ url_for('joinPartie') }}?token=" + userToken + "&pseudo=" + {{ pseudo }};
+            window.location.href = "{{ url_for('joinPartie') }}?token=" + userToken + "&pseudo=" + "{{ pseudo }}";
         });
 
         document.getElementById('btn-valider').onclick = function() {
             console.log("join room");
             debugger;
             let code = document.getElementById("txtbox-code").value;
-            socket.emit("RR " + code );
+            socket.emit("RR", { room_id: code, pseudo: "{{ pseudo }}" });
         };
 
 

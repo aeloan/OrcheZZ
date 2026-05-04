@@ -46,14 +46,14 @@ class ServerRequestDispatcher:
         client.socketio.emit("set_niveau", args, to=client.sid)
 
 ServerRequestDispatcher.handlers = {
-    "CR": ServerRequestDispatcher.handle_create_room,
-    "RR": ServerRequestDispatcher.handle_join_room,
-    "LR": ServerRequestDispatcher.handle_leave_room,
-    "PR": ServerRequestDispatcher.handle_get_players_in_room,
+    "ACK_CR": ServerRequestDispatcher.handle_create_room,
+    "ACK_RR": ServerRequestDispatcher.handle_join_room,
+    "ACK_LR": ServerRequestDispatcher.handle_leave_room,
+    "ACK_PR": ServerRequestDispatcher.handle_get_players_in_room,
     "LD": ServerRequestDispatcher.handle_get_difficulty,
     "LL": ServerRequestDispatcher.handle_get_niveau,
-    "AD": ServerRequestDispatcher.handle_set_difficulty,
-    "AL": ServerRequestDispatcher.handle_set_niveau,
+    "ACK_AD": ServerRequestDispatcher.handle_set_difficulty,
+    "ACK_AL": ServerRequestDispatcher.handle_set_niveau,
 
 }
 

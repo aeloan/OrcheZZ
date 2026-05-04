@@ -17,6 +17,21 @@
             }
             return token;
         }
+
+        // Créer le socket immédiatement si pas déjà connecté
+        if (typeof socket === 'undefined' || !socket || socket.disconnected) {
+            const token = getOrCreateToken();
+            var socket = io.connect("/", { query: { token } });
+
+            socket.on("timeout", () => {
+                alert("Déconnecté pour inactivité");
+            });
+
+            socket.on("invalidate_token", () => {
+                localStorage.removeItem("user_token");
+                window.location.href = "/";
+            });
+        }
     </script>
 </head>
 <body>
@@ -24,20 +39,6 @@
 {% block content %}{% endblock %}
 
 <script>
-const token = getOrCreateToken();
-
-// Connexion WebSocket avec token
-var socket = io.connect("/", { query: { token } });
-
-socket.on("timeout", () => {
-    alert("Déconnecté pour inactivité");
-});
-
-socket.on("invalidate_token", () => {
-    localStorage.removeItem("user_token");
-    window.location.href = "/";
-});
-
 function startRecording() {
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {

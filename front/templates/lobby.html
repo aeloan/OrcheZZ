@@ -39,9 +39,9 @@
             </div>
         {% endif %}
     </div>
-    <div class="flex-row grow-1 jc-between">
+    <div class="flex-row grow-1 jc-between ai-center">
         <button id="btn-quitter" class="btn-menu">Quitter</button>
-        <span id="room-code"></span>
+        <span id="room-code" class="padding-medium no-display"></span>
         <button id="btn-lancer" class="btn-menu">Lancer</button>
     </div>
 </div>
@@ -50,13 +50,14 @@
     var roomId = null;
 
     debugger;
-    var socket = io.connect("/", { query: { token: getOrCreateToken() } });
+    //var socket = io.connect("/", { query: { token: getOrCreateToken() } });
 
     socket.on("connect", () => {
         console.log("Connecté au socket !");
         // Si on est sur la page de création, on demande au serveur de créer la salle
         if (window.location.pathname === "/creer-partie") {
-            socket.emit("CR " + {{ joueurs[0].pseudo }});
+            debugger;
+            socket.emit("CR", { pseudo: "{{ joueurs[0].pseudo }}" });
         }
     });
 
@@ -70,15 +71,27 @@
         const codeElement = document.getElementById("room-code");
         if (codeElement) {
             codeElement.innerText = data[0];
+
+            codeElement.classList.remove("no-display");
         }
     });
 
     socket.on("join_room", (data) => {
+        debugger;
         roomId = data[0];
-        socket.emit("PR " + roomId);
+
+        const codeElement = document.getElementById("room-code");
+        if (codeElement) {
+            codeElement.innerText = roomId;
+
+            codeElement.classList.remove("no-display");
+        }
+
+        socket.emit("PR", { room_id: roomId });
     });
 
     socket.on("get_players", (data) => {
+        debugger;
         let listPlayer = data[0].split('.');
 
         const container = document.querySelector(".list-players");
@@ -110,16 +123,19 @@
     });
 
     socket.on("quit_room", (data) => {
+        debugger;
         window.location.href = "/";
     });
 
     socket.on("set_diff", (data) => {
+        debugger;
         let btndiff = document.querySelector(`[data-categorie="difficulte"][data-id="${data[0]}"]`);
 
         btndiff.classList.add("active");
     });
 
     socket.on("set_niveau", (data) => {
+        debugger;
         let btnniv = document.querySelector(`[data-categorie="niveau"][data-id="${data[0]}"]`);
 
         btnniv.classList.add("active");
@@ -129,11 +145,12 @@
         console.log("leave room");
         debugger;
 
-        socket.emit("LR " + roomId + {{ joueurs[0].pseudo }} );
+        socket.emit("LR", { room_id: roomId });
     };
 
     document.querySelectorAll('.container-niveau .btn-param').forEach(btn => {
         btn.onclick = function(e) {
+            debugger;
             console.log("change niveau");
 
             const valCode = this.dataset.id;
@@ -141,12 +158,13 @@
             let btns = document.querySelectorAll('button[data-categorie="niveau"]');
             btns.forEach(b => b.classList.remove("active"));
 
-            socket.emit("AL " + roomId + " " + valCode);
+            socket.emit("AL", { room_id: roomId, level: valCode });
         };
     });
 
     document.querySelectorAll('.container-difficulte .btn-param').forEach(btn => {
         btn.onclick = function(e) {
+            debugger;
             console.log("change difficulte");
 
             const valCode = this.dataset.id;
@@ -154,7 +172,7 @@
             let btns = document.querySelectorAll('button[data-categorie="difficulte"]');
             btns.forEach(b => b.classList.remove("active"));
 
-            socket.emit("AD " + roomId + " " + valCode);
+            socket.emit("AD", { room_id: roomId, difficulty: valCode });
         };
     });
 
