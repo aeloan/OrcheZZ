@@ -9,7 +9,7 @@ class ClientRequestDispatcher:
 
     @staticmethod
     def handle_create_room(client, args):
-        client.client_name = args
+        client.client_name = args[0]
         room = Room(client)
         client.send("ACK_CR " + room.code)
 
@@ -17,8 +17,8 @@ class ClientRequestDispatcher:
 
     @staticmethod
     def handle_join_room(client, args):
-        room = client.manager.rooms.find(args)
-        client.client_name = args
+        room = client.manager.rooms.find(args[0])
+        client.client_name = args[1]
         if room is None:
             client.send("ERR_RR ROOM_NOT_FOUND")
             return
@@ -31,7 +31,7 @@ class ClientRequestDispatcher:
 
         room.add_player(client)
         client.send("ACK_RR")
-        room.send_room("RR", args)
+        room.send_room("RR", args[1])
 
         print(f"Rejoindre salle avec args: {args}")
 
@@ -60,7 +60,7 @@ class ClientRequestDispatcher:
             client.send("ERR_AD USER_NOT_ADMIN")
             return
 
-        room.set_difficulty(client, args)
+        room.set_difficulty(client, args[0])
         client.send("ACK_AD")
         room.send_room("LD", room.difficulty)
 
@@ -84,7 +84,7 @@ class ClientRequestDispatcher:
             client.send("ERR_AL USER_NOT_ADMIN")
             return
 
-        room.set_level(client, args)
+        room.set_level(client, args[0])
         client.send("ACK_AL")
         room.send_room("LL", room.level)
 
