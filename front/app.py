@@ -34,7 +34,8 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     token = request.args.get("token")
-    cleanup_client(token)
+    socketio.start_background_task(delayed_cleanup, token, request.sid)
+
 
 
 @socketio.on("audio_chunk")
@@ -156,11 +157,20 @@ def joinPartie():
 # ========================
 
 def cleanup_client(token):
-    client = clients.pop(token)
-    if client:
+    client = clients.pop(token, None)
+    if client is not None:
         client.close()
-        socketio.emit("invalidate_token")
+        socketio.emit("invalidate_token", to=client.sid)
         del client
+
+def delayed_cleanup(token, requestSid):
+    socketio.sleep(5)
+
+    client = clients.get(token)
+
+    # si le client ne s'est pas reconnecté
+    if client and client.sid != requestSid:
+        cleanup_client(token)
 
 
 def inactivity_watcher():
