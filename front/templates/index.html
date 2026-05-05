@@ -8,6 +8,7 @@
             <label class="label-txtbox" for="txtbox-pseudo">Pseudo:</label>
             <input type="text" id="txtbox-pseudo" name="txtbox-pseudo">
         </div>
+        <span class="error-pseudo no-display">Veuillez renseigner un pseudo</span>
 
         <button id="btn-creer" class="btn-menu">Créer une partie</button>
         <button id="btn-rejoindre" class="btn-menu">Rejoindre une partie</button>
@@ -19,13 +20,28 @@
 
         document.getElementById('btn-creer').onclick = function() {
             console.log("créer room");
-            let pseudo = document.getElementById("txtbox-pseudo").value;
-            window.location.href = "{{ url_for('creerPartie') }}?token=" + userToken + "&pseudo=" + pseudo;
+
+            let pseudoHolder = document.getElementById("txtbox-pseudo");
+            let pseudo = pseudoHolder.value;
+
+            if (pseudo) {
+                window.location.href = "{{ url_for('creerPartie') }}?token=" + userToken + "&pseudo=" + pseudo;
+            }
+            else {
+                document.querySelector(".error-pseudo").classList.remove("no-display");
+            }
         };
 
         document.getElementById('btn-rejoindre').onclick = function() {
-            let pseudo = document.getElementById("txtbox-pseudo").value;
-            window.location.href = "{{ url_for('connexionRoom') }}?token=" + userToken + "&pseudo=" + pseudo;
+            let pseudoHolder = document.getElementById("txtbox-pseudo");
+            let pseudo = pseudoHolder.value;
+
+            if (pseudo) {
+                window.location.href = "{{ url_for('connexionRoom') }}?token=" + userToken + "&pseudo=" + pseudo;
+            }
+            else {
+                document.querySelector(".error-pseudo").classList.remove("no-display");
+            }
         };
     </script>
 {% endblock %}

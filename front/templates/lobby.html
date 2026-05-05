@@ -49,14 +49,12 @@
 <script>
     var roomId = null;
 
-    debugger;
     //var socket = io.connect("/", { query: { token: getOrCreateToken() } });
 
     socket.on("connect", () => {
         console.log("Connecté au socket !");
         // Si on est sur la page de création, on demande au serveur de créer la salle
         if (window.location.pathname === "/creer-partie") {
-            debugger;
             socket.emit("CR", { pseudo: "{{ joueurs[0].pseudo }}" });
         }
     });
@@ -64,7 +62,6 @@
     socket.on("create_room", (data) => {
         console.log("Code reçu du serveur TCP :", data[0]);
 
-        debugger;
         roomId = data[0];
 
         // On met à jour l'affichage dynamiquement
@@ -77,7 +74,6 @@
     });
 
     socket.on("join_room", (data) => {
-        debugger;
         roomId = data[0];
 
         const codeElement = document.getElementById("room-code");
@@ -86,8 +82,6 @@
 
             codeElement.classList.remove("no-display");
         }
-
-        socket.emit("PR", { room_id: roomId });
     });
 
     socket.on("get_players", (data) => {
@@ -123,19 +117,16 @@
     });
 
     socket.on("quit_room", (data) => {
-        debugger;
         window.location.href = "/";
     });
 
-    socket.on("set_diff", (data) => {
-        debugger;
+    socket.on("get_diff", (data) => {
         let btndiff = document.querySelector(`[data-categorie="difficulte"][data-id="${data[0]}"]`);
 
         btndiff.classList.add("active");
     });
 
-    socket.on("set_niveau", (data) => {
-        debugger;
+    socket.on("get_niveau", (data) => {
         let btnniv = document.querySelector(`[data-categorie="niveau"][data-id="${data[0]}"]`);
 
         btnniv.classList.add("active");
@@ -143,14 +134,12 @@
 
     document.getElementById('btn-quitter').onclick = function() {
         console.log("leave room");
-        debugger;
 
         socket.emit("LR", { room_id: roomId });
     };
 
     document.querySelectorAll('.container-niveau .btn-param').forEach(btn => {
         btn.onclick = function(e) {
-            debugger;
             console.log("change niveau");
 
             const valCode = this.dataset.id;
@@ -164,7 +153,6 @@
 
     document.querySelectorAll('.container-difficulte .btn-param').forEach(btn => {
         btn.onclick = function(e) {
-            debugger;
             console.log("change difficulte");
 
             const valCode = this.dataset.id;

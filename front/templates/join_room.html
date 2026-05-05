@@ -8,6 +8,7 @@
             <label class="label-txtbox" for="txtbox-code">Code:</label>
             <input type="text" id="txtbox-code" name="txtbox-code">
         </div>
+        <span class="error-code no-display">Veuillez renseigner un code</span>
 
         <button id="btn-valider" class="btn-menu padding-medium">Valider</button>
     </div>
@@ -26,9 +27,14 @@
 
         document.getElementById('btn-valider').onclick = function() {
             console.log("join room");
-            debugger;
             let code = document.getElementById("txtbox-code").value;
-            socket.emit("RR", { room_id: code, pseudo: "{{ pseudo }}" });
+
+            if (code) {
+                socket.emit("RR", { room_id: code, pseudo: "{{ pseudo }}" });
+            }
+            else {
+                document.querySelector(".error-code").classList.remove("no-display");
+            }
         };
 
 
