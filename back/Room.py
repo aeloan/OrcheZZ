@@ -8,7 +8,7 @@ class Room:
         self.admin = admin
         self.players = [admin]
         self.admin.manager.rooms.append(self)
-        choices = string.ascii_letters + string.digits
+        choices = string.ascii_uppercase + string.digits
         self.code = ''.join(random.choice(choices) for i in range(5))
         self.running = False
         self.difficulty = 0
