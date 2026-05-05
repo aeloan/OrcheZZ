@@ -34,7 +34,7 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     token = request.args.get("token")
-    socketio.start_background_task(delayed_cleanup, token, request.sid)
+    # socketio.start_background_task(delayed_cleanup, token, request.sid)
 
 
 

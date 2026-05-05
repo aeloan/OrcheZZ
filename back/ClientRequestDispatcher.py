@@ -11,6 +11,7 @@ class ClientRequestDispatcher:
     def handle_create_room(client, args):
         client.client_name = args[0]
         room = Room(client)
+        client.room = room
         client.send(f"ACK_CR {room.code}")
 
         print(f"Création salle avec args: {args}")
@@ -19,6 +20,7 @@ class ClientRequestDispatcher:
     def handle_join_room(client, args):
         room = next((r for r in client.manager.rooms if r.code == args[0]), None)
         client.client_name = args[1]
+
         if room is None:
             client.send("ERR_RR ROOM_NOT_FOUND")
             return
@@ -29,8 +31,9 @@ class ClientRequestDispatcher:
                 return
             client.room.remove_player(client)
 
+        client.room = room
         room.add_player(client)
-        client.send("ACK_RR")
+        client.send(f"ACK_RR {room.code}")
         room.send_room(f"RR {args[1]}")
 
         print(f"Rejoindre salle avec args: {args}")

@@ -26,6 +26,11 @@ class ServerRequestDispatcher:
         client.socketio.emit("get_players", args, to=client.sid)
 
     @staticmethod
+    def handle_new_player_joined(client, args):
+        print(f"Ajout d'un nouveau joueur dans la salle avec args: {args}")
+        client.socketio.emit("new_player_joined", args, to=client.sid)
+
+    @staticmethod
     def handle_get_difficulty(client, args):
         print(f"Récupération de la difficulté de la salle avec args: {args}")
         client.socketio.emit("get_diff", args, to=client.sid)
@@ -48,6 +53,7 @@ class ServerRequestDispatcher:
 ServerRequestDispatcher.handlers = {
     "ACK_CR": ServerRequestDispatcher.handle_create_room,
     "ACK_RR": ServerRequestDispatcher.handle_join_room,
+    "RR": ServerRequestDispatcher.handle_new_player_joined,
     "ACK_LR": ServerRequestDispatcher.handle_leave_room,
     "ACK_PR": ServerRequestDispatcher.handle_get_players_in_room,
     "LD": ServerRequestDispatcher.handle_get_difficulty,

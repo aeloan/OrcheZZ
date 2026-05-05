@@ -57,9 +57,14 @@
         if (window.location.pathname === "/creer-partie") {
             socket.emit("CR", { pseudo: "{{ joueurs[0].pseudo }}" });
         }
+        else if (window.location.pathname === "/joinPartie") {
+            socket.emit("PR");
+        }
     });
 
     socket.on("create_room", (data) => {
+        debugger;
+
         console.log("Code reçu du serveur TCP :", data[0]);
 
         roomId = data[0];
@@ -74,6 +79,7 @@
     });
 
     socket.on("join_room", (data) => {
+        debugger;
         roomId = data[0];
 
         const codeElement = document.getElementById("room-code");
@@ -82,6 +88,28 @@
 
             codeElement.classList.remove("no-display");
         }
+    });
+
+
+    socket.on("new_player_joined", (data) => {
+        debugger;
+        let newplayer = data[0];
+
+        const container = document.querySelector(".list-players");
+
+        const iconSrc = "/static/image/player.svg";
+
+        const playerHtml = `
+            <div class="flex-col ai-center player-card margin-small padding-medium
+                jc-between p-2 bg-dark rounded gap-2 basis-none">
+                <div class="flex-col ai-center jc-center gap-1">
+                    <img src="${iconSrc}" style="width: 48px; height: 48px;">
+                    <span class="text-white">${newplayer}</span>
+                </div>
+            </div>
+        `;
+
+        container.innerHTML += playerHtml;
     });
 
     socket.on("get_players", (data) => {
@@ -105,10 +133,13 @@
                         jc-between p-2 bg-dark rounded gap-2 basis-none">
                         <div class="flex-col ai-center jc-center gap-1">
                             <img src="${iconSrc}" style="width: 48px; height: 48px;">
-                            <span class="text-white">${pseudo}</span>
+                            <span class="text-white">${playerData}</span>
                         </div>
                     </div>
                 `;
+
+                container.innerHTML += playerHtml;
+
                 i++;
             });
         } else if (container) {

@@ -22,6 +22,7 @@
 
         socket.on("join_room", (data) => {
             debugger;
+
             window.location.href = "{{ url_for('joinPartie') }}?token=" + userToken + "&pseudo=" + "{{ pseudo }}";
         });
 
