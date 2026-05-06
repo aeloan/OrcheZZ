@@ -24,7 +24,6 @@ class ClientHandler(BaseHandler):
             self.manager = None
         self.leave_room()
 
-
     def set_room(self, room: Room):
         self.room = room
 

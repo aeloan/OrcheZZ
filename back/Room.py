@@ -1,10 +1,7 @@
 import asyncio
-import base64
-import io
 import random
 import string
 import threading
-from asyncio import sleep
 
 from back.MusicScoreScorer import compare_notes, mix_audios
 

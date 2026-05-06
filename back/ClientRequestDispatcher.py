@@ -1,6 +1,4 @@
 from typing import Callable
-import io
-
 from back.Room import Room
 
 
@@ -114,7 +112,6 @@ class ClientRequestDispatcher:
         room.start_game()
         room.send_room("ACK_SG")
 
-
     @staticmethod
     def handle_audio(client, args):
         print(f"Audio reçu")
@@ -125,6 +122,7 @@ class ClientRequestDispatcher:
             return
 
         room.handle_client_audio(client, args)
+
 
 ClientRequestDispatcher.handlers = {
     "AU": ClientRequestDispatcher.handle_audio,
