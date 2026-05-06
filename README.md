@@ -81,6 +81,9 @@ python app.py
 http://localhost:5000
 ```
 
+## 5. Informations de développement
+
+Les services communiquant par socket, une documentation des différents codes envoyés/reçus par le serveur et le client sont respectivement décrits dans `./CodeSocketClient` et `./CodeSocketServeur`
 
 ## Auteurs
 Eloan ANDRE et Anna BOUDOUL (FISA2)

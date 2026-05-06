@@ -1,5 +1,6 @@
 import socket
 
+
 class SocketFramer:
     def __init__(self, sock: socket.socket):
         self.sock = sock

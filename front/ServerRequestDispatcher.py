@@ -1,4 +1,3 @@
-### TEST
 from typing import Callable
 
 
@@ -55,7 +54,6 @@ class ServerRequestDispatcher:
         print(f"Lancement de la partie: {args}")
         client.socketio.emit("start_game", args, to=client.sid)
 
-
     @staticmethod
     def handle_init_round(client, args):
         print(f"Lancement du round: {args}")
@@ -77,6 +75,7 @@ class ServerRequestDispatcher:
         client.socketio.emit("get_results", args, to=client.sid)
 
 
+
 ServerRequestDispatcher.handlers = {
     "ACK_CR": ServerRequestDispatcher.handle_create_room,
     "ACK_RR": ServerRequestDispatcher.handle_join_room,
@@ -95,5 +94,3 @@ ServerRequestDispatcher.handlers = {
     "EG": ServerRequestDispatcher.handle_end_game,
     "ACK_GG": ServerRequestDispatcher.handle_get_results,
 }
-
-### TEST

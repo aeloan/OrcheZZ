@@ -1,5 +1,4 @@
 import socket
-import threading
 
 from back.ClientHandler import ClientHandler
 
