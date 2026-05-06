@@ -1,3 +1,4 @@
+import asyncio
 import random
 import string
 import threading
@@ -36,12 +37,14 @@ class Room:
         if not self.running:
             self.running = True
             self.score_game = {p: 0 for p in self.players}
-            threading.Thread(target=self.game_loop, daemon=True).start()
+            # Crée une tâche asynchrone qui tourne en arrière-plan dans un thread séparé
+            threading.Thread(target=lambda: asyncio.run(self.game_loop()), daemon=True).start()
 
-    def game_loop(self):
+    async def game_loop(self):
         while self.running:
             self.init_round()
-            sleep(5)
+            # On attend 5 secondes sans bloquer les autres joueurs/salons
+            await asyncio.sleep(5)
             self.end_round()
 
     def send_room(self, message: str | bytes):

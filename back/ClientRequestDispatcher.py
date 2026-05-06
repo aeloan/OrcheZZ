@@ -112,7 +112,7 @@ class ClientRequestDispatcher:
             return
 
         room.start_game()
-        client.send("ACK_SG")
+        room.send_room("ACK_SG")
 
 
     @staticmethod
