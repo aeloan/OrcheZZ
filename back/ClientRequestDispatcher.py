@@ -50,7 +50,7 @@ class ClientRequestDispatcher:
             client.send("ERR_PR NO_PLAYERS")
             return
 
-        client.send(f"ACK_PR {' '.join([player.client_name for player in players])}")
+        client.send(f"ACK_PR {room.code} {' '.join([player.client_name for player in players])}")
 
     @staticmethod
     def handle_set_difficulty(client, args):

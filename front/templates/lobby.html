@@ -49,6 +49,7 @@
 <script>
     var roomId = null;
 
+
     //var socket = io.connect("/", { query: { token: getOrCreateToken() } });
 
     socket.on("connect", () => {
@@ -57,14 +58,9 @@
         if (window.location.pathname === "/creer-partie") {
             socket.emit("CR", { pseudo: "{{ joueurs[0].pseudo }}" });
         }
-        else if (window.location.pathname === "/joinPartie") {
-            socket.emit("PR");
-        }
     });
 
     socket.on("create_room", (data) => {
-        debugger;
-
         console.log("Code reçu du serveur TCP :", data[0]);
 
         roomId = data[0];
@@ -78,21 +74,7 @@
         }
     });
 
-    socket.on("join_room", (data) => {
-        debugger;
-        roomId = data[0];
-
-        const codeElement = document.getElementById("room-code");
-        if (codeElement) {
-            codeElement.innerText = roomId;
-
-            codeElement.classList.remove("no-display");
-        }
-    });
-
-
     socket.on("new_player_joined", (data) => {
-        debugger;
         let newplayer = data[0];
 
         const container = document.querySelector(".list-players");
@@ -114,12 +96,21 @@
 
     socket.on("get_players", (data) => {
         debugger;
-        let listPlayer = data[0].split('.');
+        roomId = data[0];
+
+        const codeElement = document.getElementById("room-code");
+        if (codeElement) {
+            codeElement.innerText = roomId;
+
+            codeElement.classList.remove("no-display");
+        }
+
+        let listPlayer = data[1].split('.');
 
         const container = document.querySelector(".list-players");
 
         if (container && listPlayer.length > 0 && listPlayer[0] !== "") {
-            container.innerHTML = "";
+            //container.innerHTML = "";
 
             let i = 0;
             listPlayer.forEach(playerData => {
