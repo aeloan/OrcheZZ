@@ -1,6 +1,6 @@
 {% macro player(pseudo, est_pret, est_host) %}
 <div class="flex-col ai-center player-card margin-small padding-medium
-    jc-between p-2 bg-dark rounded gap-2">
+    jc-between p-2 bg-dark rounded gap-2 basis-none">
     <div class="flex-col ai-center jc-center gap-1">
         {% if est_host %}
             <img src="{{ url_for('static', filename='image/player-crown.svg') }}"
@@ -11,9 +11,9 @@
         {% endif %}
 
         <span class="text-white">{{ pseudo }}</span>
-        <span class="{{ 'text-green' if est_pret else 'text-red' }}">
-            {{ "Prêt" if est_pret else "En attente..." }}
-        </span>
+<!--        <span class="{{ 'text-green' if est_pret else 'text-red' }}">-->
+<!--            {{ "Prêt" if est_pret else "En attente..." }}-->
+<!--        </span>-->
     </div>
 </div>
 {% endmacro %}

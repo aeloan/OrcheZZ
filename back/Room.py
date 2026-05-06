@@ -12,8 +12,8 @@ class Room:
     def __init__(self, admin):
         self.admin = admin
         self.players = [admin]
-        self.admin.manager.rooms.add(self)
-        choices = string.ascii_letters + string.digits
+        self.admin.manager.rooms.append(self)
+        choices = string.ascii_uppercase + string.digits
         self.code = ''.join(random.choice(choices) for i in range(5))
         self.running = False
         self.difficulty = 0

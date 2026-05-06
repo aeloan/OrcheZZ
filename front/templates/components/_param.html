@@ -1,2 +1,12 @@
-{% macro param(label, icone, code) %}
-
+{% macro param(id, label, code, categorie) %}
+<button class="btn-param flex-col ai-center param-card margin-small padding-medium
+        jc-between p-2 bg-dark rounded gap-2 basis-none"
+        data-id="{{ id }}"
+        data-code="{{ code }}"
+        data-categorie="{{ categorie }}"
+>
+    <div class="flex-col ai-center jc-center gap-1 flex-wrap">
+        <span class="text-white">{{ label }}</span>
+    </div>
+</button>
+{% endmacro %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex-col">
+    <h1>Rejoindre une partie</h1>
+    <div class="flex-col grow-1 jc-center ai-center padding-large">
+        <div class="flex-row">
+            <label class="label-txtbox" for="txtbox-code">Code:</label>
+            <input type="text" id="txtbox-code" name="txtbox-code">
+        </div>
+        <span class="error-code no-display">Veuillez renseigner un code</span>
+
+        <button id="btn-valider" class="btn-menu padding-medium">Valider</button>
+    </div>
+</div>
+
+<script>
+        // On récupère le token via la fonction définie dans base.html
+        const userToken = getOrCreateToken();
+
+        var socket = io.connect("/", { query: { token: getOrCreateToken() } });
+
+        socket.on("join_room", (data) => {
+            debugger;
+            let code = document.getElementById("txtbox-code").value;
+
+            socket.emit("PR", { room_id: code });
+
+            window.location.href = "{{ url_for('joinPartie') }}?token=" + userToken + "&pseudo=" + "{{ pseudo }}";
+        });
+
+        document.getElementById('btn-valider').onclick = function() {
+            console.log("join room");
+            let code = document.getElementById("txtbox-code").value;
+
+            if (code) {
+                debugger;
+                socket.emit("RR", { room_id: code, pseudo: "{{ pseudo }}" });
+            }
+            else {
+                document.querySelector(".error-code").classList.remove("no-display");
+            }
+        };
+
+
+    </script>
+{% endblock %}

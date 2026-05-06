@@ -1,5 +1,5 @@
 import librosa
-from SocketManager import SocketManager
+from back.SocketManager import SocketManager
 
 
 def main():

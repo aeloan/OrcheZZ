@@ -11,14 +11,16 @@ class ClientRequestDispatcher:
     def handle_create_room(client, args):
         client.client_name = args[0]
         room = Room(client)
-        client.send("ACK_CR " + room.code)
+        client.room = room
+        client.send(f"ACK_CR {room.code}")
 
         print(f"Création salle avec args: {args}")
 
     @staticmethod
     def handle_join_room(client, args):
-        room = client.manager.rooms.find(args[0])
+        room = next((r for r in client.manager.rooms if r.code == args[0]), None)
         client.client_name = args[1]
+
         if room is None:
             client.send("ERR_RR ROOM_NOT_FOUND")
             return
@@ -29,9 +31,10 @@ class ClientRequestDispatcher:
                 return
             client.room.remove_player(client)
 
+        client.room = room
         room.add_player(client)
-        client.send("ACK_RR")
-        room.send_room("RR", args[1])
+        client.send(f"ACK_RR {room.code}")
+        room.send_room(f"RR {args[1]}")
 
         print(f"Rejoindre salle avec args: {args}")
 
@@ -47,7 +50,7 @@ class ClientRequestDispatcher:
             client.send("ERR_PR NO_PLAYERS")
             return
 
-        client.send("ACK_PR", " ".join([player.client_name for player in players]))
+        client.send(f"ACK_PR {room.code} {' '.join([player.client_name for player in players])}")
 
     @staticmethod
     def handle_set_difficulty(client, args):
@@ -60,9 +63,9 @@ class ClientRequestDispatcher:
             client.send("ERR_AD USER_NOT_ADMIN")
             return
 
-        room.set_difficulty(client, args[0])
+        room.set_difficulty(client, args[1])
         client.send("ACK_AD")
-        room.send_room("LD", room.difficulty)
+        room.send_room(f"LD {room.difficulty}")
 
     @staticmethod
     def handle_get_difficulty(client, args):
@@ -71,7 +74,7 @@ class ClientRequestDispatcher:
             client.send("ERR_LD ROOM_NOT_FOUND")
             return
 
-        client.send("ACK_LD", room.difficulty)
+        client.send(f"ACK_LD {room.difficulty}")
 
     @staticmethod
     def handle_set_level(client, args):
@@ -84,9 +87,9 @@ class ClientRequestDispatcher:
             client.send("ERR_AL USER_NOT_ADMIN")
             return
 
-        room.set_level(client, args[0])
+        room.set_level(client, args[1])
         client.send("ACK_AL")
-        room.send_room("LL", room.level)
+        room.send_room(f"LL {room.level}")
 
     @staticmethod
     def handle_get_level(client, args):
@@ -95,7 +98,7 @@ class ClientRequestDispatcher:
             client.send("ERR_LL ROOM_NOT_FOUND")
             return
 
-        client.send("ACK_LL", room.level)
+        client.send(f"ACK_LL {room.level}")
 
     @staticmethod
     def handle_start_game(client, args):

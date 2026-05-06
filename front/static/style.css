@@ -10,10 +10,43 @@
     border-radius: 20%
 }
 
+.param-card {
+    border: 2px solid;
+    border-radius: 15px;
+}
+
 .text-green {
     color: #00561b;
 }
 
+.text-red {
+    color: #D22B2B;
+}
+
 .barre {
     border: 2px solid,
+}
+
+.show-part, .show-param {
+    width: 50%;
+}
+
+.label-txtbox {
+    margin-right: 10px;
+}
+
+.btn-param.active {
+    background-color: black;
+    color: white;
+}
+
+#room-code {
+    font-size: 26px;
+    border: 2px solid;
+    height: 30px;
+    text-align: center;
+}
+
+.error-pseudo, .error-code {
+    color: red;
 }

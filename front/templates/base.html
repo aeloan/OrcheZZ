@@ -8,35 +8,37 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 
+    <script>
+        function getOrCreateToken() {
+            let token = sessionStorage.getItem("user_token");
+            if (!token) {
+                token = Math.random().toString(36).substring(2, 12);
+                sessionStorage.setItem("user_token", token);
+            }
+            return token;
+        }
+
+        // Créer le socket immédiatement si pas déjà connecté
+        if (typeof socket === 'undefined' || !socket || socket.disconnected) {
+            const token = getOrCreateToken();
+            var socket = io.connect("/", { query: { token } });
+
+            socket.on("timeout", () => {
+                alert("Déconnecté pour inactivité");
+            });
+
+            socket.on("invalidate_token", () => {
+                sessionStorage.removeItem("user_token");
+                window.location.href = "/";
+            });
+        }
+    </script>
 </head>
 <body>
 
 {% block content %}{% endblock %}
 
 <script>
-function getOrCreateToken() {
-    let token = localStorage.getItem("user_token");
-    if (!token) {
-        token = Math.random().toString(36).substring(2, 12);
-        localStorage.setItem("user_token", token);
-    }
-    return token;
-}
-
-const token = getOrCreateToken();
-
-// Connexion WebSocket avec token
-const socket = io.connect("/", { query: { token } });
-
-socket.on("timeout", () => {
-    alert("Déconnecté pour inactivité");
-});
-
-socket.on("invalidate_token", () => {
-    localStorage.removeItem("user_token");
-    window.location.href = "/";
-});
-
 function startRecording() {
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {

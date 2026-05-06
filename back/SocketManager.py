@@ -1,7 +1,7 @@
 import socket
 import threading
 
-from ClientHandler import ClientHandler
+from back.ClientHandler import ClientHandler
 
 
 class SocketManager:

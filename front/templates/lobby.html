@@ -1,13 +1,16 @@
 
 {% extends "base.html" %}
 
+{% from 'components/_player.html' import player %}
+{% from 'components/_param.html' import param %}
+
 {% block content %}
 <h1>Lobby</h1>
 <div class="flex-col">
     <div class="flex-row grow-1">
-        <div class="flex-col grow-1 margin-medium">
+        <div class="show-part flex-col margin-medium">
             <h2>Participants</h2>
-            <div class="flex-row flex-wrap grow-1">
+            <div class="flex-row flex-wrap basis-none list-players">
                 {% for j in joueurs %}
                     {{ player(j.pseudo, j.est_pret, j.est_host) }}
                 {% else %}
@@ -15,27 +18,217 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="barre"></div>
-        <div class="flex-col grow-1 margin-medium">
-            <h2>Paramètres</h2>
+            <div class="barre"></div>
+            <div class="show-param flex-col margin-medium basis-none">
+                <h2>Paramètres</h2>
 
-            <h3>Niveau</h3>
-            <div class="flex-row flex-wrap grow-1">
-                {% for j in joueurs %}
-                    {{ player(j.pseudo, j.est_pret, j.est_host) }}
-                {% endfor %}
-            </div>
+                <h3>Niveau</h3>
+                <div class="flex-row flex-wrap container-niveau">
+                    {% for n in niveaux %}
+                        {% if isCreation %}
+                            {{ param(n.id, n.label, n.code, "niveau") }}
+                        {% else %}
+                            <span class="niveau no-display" data-id="{{ n.id }}">{{ n.label }}</span>
+                        {% endif %}
+                    {% endfor %}
+                    {% if not isCreation %}
+                        <span class="niveau" data-id="-1">Non défini</span>
+                    {% endif %}
+                </div>
 
-            <h3>Difficulté</h3>
-            <div class="flex-row flex-wrap grow-1">
-                {% for j in joueurs %}
-                    {{ player(j.pseudo, j.est_pret, j.est_host) }}
-                {% endfor %}
+                <h3>Difficulté</h3>
+                <div class="flex-row flex-wrap container-difficulte">
+                    {% for d in difficultes %}
+                        {% if isCreation %}
+                            {{ param(d.id, d.label, d.code, "difficulte") }}
+                        {% else %}
+                            <span class="difficulte no-display" data-id="{{ d.id }}">{{ d.label }}</span>
+                        {% endif %}
+                    {% endfor %}
+                    {% if not isCreation %}
+                        <span class="difficulte" data-id="-1">Non défini</span>
+                    {% endif %}
+                </div>
             </div>
-        </div>
     </div>
-    <div class="flex-row grow-1 jc-between">
-
+    <div class="flex-row grow-1 jc-between ai-center">
+        <button id="btn-quitter" class="btn-menu">Quitter</button>
+        <span id="room-code" class="padding-medium no-display"></span>
+        <button id="btn-lancer" class="btn-menu">Lancer</button>
     </div>
 </div>
+
+<script>
+    var roomId = null;
+
+
+    //var socket = io.connect("/", { query: { token: getOrCreateToken() } });
+
+    socket.on("connect", () => {
+        console.log("Connecté au socket !");
+        // Si on est sur la page de création, on demande au serveur de créer la salle
+        if (window.location.pathname === "/creer-partie") {
+            socket.emit("CR", { pseudo: "{{ joueurs[0].pseudo }}" });
+        }
+    });
+
+    socket.on("create_room", (data) => {
+        console.log("Code reçu du serveur TCP :", data[0]);
+
+        roomId = data[0];
+
+        // On met à jour l'affichage dynamiquement
+        const codeElement = document.getElementById("room-code");
+        if (codeElement) {
+            codeElement.innerText = data[0];
+
+            codeElement.classList.remove("no-display");
+        }
+    });
+
+    socket.on("new_player_joined", (data) => {
+        let newplayer = data[0];
+
+        const container = document.querySelector(".list-players");
+
+        const iconSrc = "/static/image/player.svg";
+
+        const playerHtml = `
+            <div class="flex-col ai-center player-card margin-small padding-medium
+                jc-between p-2 bg-dark rounded gap-2 basis-none">
+                <div class="flex-col ai-center jc-center gap-1">
+                    <img src="${iconSrc}" style="width: 48px; height: 48px;">
+                    <span class="text-white">${newplayer}</span>
+                </div>
+            </div>
+        `;
+
+        container.innerHTML += playerHtml;
+    });
+
+    socket.on("get_players", (data) => {
+        roomId = data[0];
+
+        const codeElement = document.getElementById("room-code");
+        if (codeElement) {
+            codeElement.innerText = roomId;
+
+            codeElement.classList.remove("no-display");
+        }
+
+        let listPlayer = data.slice(1);
+
+        const container = document.querySelector(".list-players");
+
+        if (container && listPlayer.length > 0 && listPlayer[0] !== "") {
+            container.innerHTML = "";
+
+            let i = 0;
+            listPlayer.forEach(playerData => {
+
+                const iconSrc = (i === 0)
+                    ? "/static/image/player-crown.svg"
+                    : "/static/image/player.svg";
+
+                const playerHtml = `
+                    <div class="flex-col ai-center player-card margin-small padding-medium
+                        jc-between p-2 bg-dark rounded gap-2 basis-none">
+                        <div class="flex-col ai-center jc-center gap-1">
+                            <img src="${iconSrc}" style="width: 48px; height: 48px;">
+                            <span class="text-white">${playerData}</span>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML += playerHtml;
+
+                i++;
+            });
+        } else if (container) {
+            container.innerHTML = "<p>En attente de joueurs...</p>";
+        }
+
+        socket.emit("LD", { room_id: roomId });
+
+        socket.emit("LL", { room_id: roomId });
+    });
+
+    socket.on("quit_room", (data) => {
+        window.location.href = "/";
+    });
+
+    socket.on("get_diff", (data) => {
+        if (window.location.pathname === "/creer-partie") {
+            let btndiff = document.querySelector(`[data-categorie="difficulte"][data-id="${data[0]}"]`);
+
+            btndiff.classList.add("active");
+        }
+        else {
+            let allSpanDiff = document.querySelectorAll(`span.difficulte`);
+
+            allSpanDiff.forEach(span => {
+                span.classList.add("no-display");
+            });
+
+            let selectedSpandiff = document.querySelector(`span.difficulte[data-id="${data[0]}"]`);
+
+            selectedSpandiff.classList.remove("no-display");
+        }
+    });
+
+    socket.on("get_niveau", (data) => {
+        if (window.location.pathname === "/creer-partie") {
+            let btnniv = document.querySelector(`[data-categorie="niveau"][data-id="${data[0]}"]`);
+
+            btnniv.classList.add("active");
+        }
+        else {
+            let allSpanniv = document.querySelectorAll(`span.niveau`);
+
+            allSpanniv.forEach(span => {
+                span.classList.add("no-display");
+            });
+
+            let selectedSpanniv = document.querySelector(`span.niveau[data-id="${data[0]}"]`);
+
+            selectedSpanniv.classList.remove("no-display");
+        }
+    });
+
+
+    document.getElementById('btn-quitter').onclick = function() {
+        console.log("leave room");
+
+        socket.emit("LR", { room_id: roomId });
+    };
+
+    document.querySelectorAll('.container-niveau .btn-param').forEach(btn => {
+        btn.onclick = function(e) {
+            console.log("change niveau");
+
+            const valCode = this.dataset.id;
+
+            let btns = document.querySelectorAll('button[data-categorie="niveau"]');
+            btns.forEach(b => b.classList.remove("active"));
+
+            socket.emit("AL", { room_id: roomId, level: valCode });
+        };
+    });
+
+    document.querySelectorAll('.container-difficulte .btn-param').forEach(btn => {
+        btn.onclick = function(e) {
+            console.log("change difficulte");
+
+            const valCode = this.dataset.id;
+
+            let btns = document.querySelectorAll('button[data-categorie="difficulte"]');
+            btns.forEach(b => b.classList.remove("active"));
+
+            socket.emit("AD", { room_id: roomId, difficulty: valCode });
+        };
+    });
+
+
+
+</script>
 {% endblock %}
