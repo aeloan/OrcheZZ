@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex-col">
+    <h1>Résultats</h1>
+
+    <div class="list-results">
+
+    </div>
+</div>
+
+<script>
+    socket.emit("GG", {});
+
+    socket.on("get_results", (data) => {
+        debugger;
+        let listResult = data;
+
+        const container = document.querySelector(".list-results");
+
+        if (container && listResult.length > 0 && listResult[0] !== "") {
+            container.innerHTML = "";
+
+            for (let i = 0; i < listResult.length; i += 2) {
+                const pseudo = listResult[i];
+                const score = listResult[i + 1];
+
+                if (pseudo !== undefined && score !== undefined) {
+                    const resultHtml = `
+                        <div class="flex-row ai-center result-card margin-small padding-medium
+                            jc-between p-2 bg-dark rounded gap-2 basis-none">
+                            <span class="text-white">${pseudo}</span>
+                            <span class="text-white font-bold">${score}</span>
+                        </div>
+                    `;
+                    container.innerHTML += resultHtml;
+                }
+            }
+        } else if (container) {
+            container.innerHTML = "<p>Aucun résultat...</p>";
+        }
+    });
+
+</script>
+{% endblock %}

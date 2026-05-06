@@ -8,6 +8,11 @@
 </div>
 
 <script>
+    const userToken = getOrCreateToken();
+
+    socket.on("end_game", (data) => {
+        window.location.href = "{{ url_for('endPartie') }}?token=" + userToken;
+    });
 
     socket.on("init_round", (data) => {
         const note = document.querySelector(".current-note");

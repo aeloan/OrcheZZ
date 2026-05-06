@@ -50,6 +50,7 @@ class Room:
             await asyncio.sleep(5)
             self.end_round()
         self.running = False
+        self.send_room(f"EG")
 
     def send_room(self, message: str | bytes):
         for p in self.players:

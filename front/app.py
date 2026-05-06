@@ -119,6 +119,13 @@ def set_niveau(data):
         level = data["level"]
         client.send(f"AL {room_id} {level}")
 
+
+@socketio.on('GG')
+def get_results(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        client.send(f"GG")
+
 @socketio.on('SG')
 def start_game(data):
     client = clients.get(request.args.get("token"))
@@ -185,7 +192,9 @@ def joinPartie():
 def startPartie():
     return render_template('game_room.html')
 
-
+@app.route('/end-room')
+def endPartie():
+    return render_template('result_screen.html')
 # ========================
 # RUN
 # ========================
