@@ -52,7 +52,7 @@
             </div>
     </div>
     <div class="flex-row grow-1 jc-between ai-center">
-        <button id="btn-quitter" class="btn-menu">Quitter</button>
+<!--        <button id="btn-quitter" class="btn-menu">Quitter</button>-->
         <span id="room-code" class="padding-medium no-display"></span>
         {% if isCreation %}
             <button id="btn-lancer" class="btn-menu">Lancer</button>
@@ -203,11 +203,11 @@
         window.location.href = "{{ url_for('startPartie') }}?token=" + userToken;
     });
 
-    document.getElementById('btn-quitter').onclick = function() {
-        console.log("leave room");
-
-        socket.emit("LR", { room_id: roomId });
-    };
+    // document.getElementById('btn-quitter').onclick = function() {
+    //     console.log("leave room");
+    //
+    //     socket.emit("LR", { room_id: roomId });
+    // };
 
 
     document.getElementById('btn-lancer').onclick = function() {
