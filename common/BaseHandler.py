@@ -19,9 +19,9 @@ class BaseHandler(ABC):
         while self.running:
             try:
                 raw_msg = self.framer.read_message()
-                if raw_msg.startswith(b"AU "):
+                if raw_msg.startswith(b"AU ") or raw_msg.startswith(b"AR "):
                     parts = raw_msg.split(b" ", 1)
-                    cmd = 'AU'
+                    cmd = parts[0].decode()
                     args = parts[1]
 
                     self.dispatch(cmd=cmd, args=args)

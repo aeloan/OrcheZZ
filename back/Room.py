@@ -43,11 +43,13 @@ class Room:
             threading.Thread(target=lambda: asyncio.run(self.game_loop()), daemon=True).start()
 
     async def game_loop(self):
-        while self.running:
+        for i in range (5) :
+            await asyncio.sleep(2)
             self.init_round()
             # On attend 5 secondes sans bloquer les autres joueurs/salons
             await asyncio.sleep(5)
             self.end_round()
+        self.running = False
 
     def send_room(self, message: str | bytes):
         for p in self.players:
@@ -62,6 +64,7 @@ class Room:
             self.level = level_code
 
     def init_round(self):
+
         self.current_note = random.choice(notes)
         self.score_round = {p: 0 for p in self.players}
         self.round_audios = {p: None for p in self.players}
@@ -73,9 +76,8 @@ class Room:
 
         final_audio = mix_audios(self.round_audios.values())
         if final_audio and len(final_audio) > 0:
-            audio_bytes = final_audio.export(format="wav").read()
-            audio_b64 = base64.b64encode(audio_bytes).decode('utf-8')
-            self.send_room(f"AR {audio_b64}")
+            audio_bytes = final_audio.export(format="webm").read()
+            self.send_room(b"AR " + audio_bytes)
         else:
             self.send_room("AR")
 

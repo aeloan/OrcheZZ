@@ -17,30 +17,33 @@
         startRecording();
     });
 
-    socket.on("end_round", (data) => {
-        console.log("Fin du round - lecture du son mixé");
+    socket.on("final_audio_round", async (data) => {
+        console.log(data);
+        console.log(data.byteLength);
 
-        const audioB64 = data[0];
+        const blob = new Blob([data], { type: "audio/webm" });
 
-        if (!audioB64) {
-            console.warn("Aucun audio reçu");
-            return;
-        }
+        console.log(blob.size);
+
+        const url = URL.createObjectURL(blob);
+
+        console.log(url);
+
+        const audio = new Audio(url);
+
+        audio.oncanplay = () => {
+            console.log("can play");
+        };
+
+        audio.onerror = (e) => {
+            console.error("audio error", e);
+        };
 
         try {
-            const audio = new Audio();
-            audio.src = 'data:audio/wav;base64,' + audioB64;
-            audio.volume = 0.8;
-
-            audio.onplay = () => console.log("Lecture du son mixé");
-            audio.onended = () => console.log("Son terminé");
-            audio.onerror = () => console.error("Erreur audio");
-
-            // Lancer la lecture
-            audio.play();
-
-        } catch (error) {
-            console.error("Erreur:", error);
+            await audio.play();
+            console.log("playing");
+        } catch (e) {
+            console.error(e);
         }
     });
 
