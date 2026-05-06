@@ -96,20 +96,20 @@ def mix_audios(round_audios):
     return base
 
 # Tests
-if __name__ == "__main__":
-
-    with open("si.webm", "rb") as f:
-        dataSi = f.read()
-
-    with open("do.webm", "rb") as f:
-        dataDo = f.read()
-
-    mixed = mix_audios([dataSi, dataDo])
-    mixed.export("output.wav", format="wav")
-
-    with open("output.wav", "rb") as f:
-        data = f.read()
-
-    score = compare_notes(data, "B")
-
-    print("Score:", score)
+# if __name__ == "__main__":
+#
+#     with open("si.webm", "rb") as f:
+#         dataSi = f.read()
+#
+#     with open("do.webm", "rb") as f:
+#         dataDo = f.read()
+#
+#     mixed = mix_audios([dataSi, dataDo])
+#     mixed.export("output.wav", format="wav")
+#
+#     with open("output.wav", "rb") as f:
+#         data = f.read()
+#
+#     score = compare_notes(data, "B")
+#
+#     print("Score:", score)

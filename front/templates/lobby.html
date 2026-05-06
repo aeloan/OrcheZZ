@@ -200,7 +200,6 @@
     });
 
     socket.on("start_game", (data) => {
-        debugger;
         window.location.href = "{{ url_for('startPartie') }}?token=" + userToken;
     });
 
@@ -212,7 +211,6 @@
 
 
     document.getElementById('btn-lancer').onclick = function() {
-        debugger;
         console.log("lancer partie");
 
         socket.emit("SG", {});

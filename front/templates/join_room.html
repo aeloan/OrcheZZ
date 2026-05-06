@@ -21,7 +21,6 @@
         var socket = io.connect("/", { query: { token: getOrCreateToken() } });
 
         socket.on("join_room", (data) => {
-            debugger;
             let code = document.getElementById("txtbox-code").value;
 
             socket.emit("PR", { room_id: code });
@@ -34,7 +33,6 @@
             let code = document.getElementById("txtbox-code").value;
 
             if (code) {
-                debugger;
                 socket.emit("RR", { room_id: code, pseudo: "{{ pseudo }}" });
             }
             else {

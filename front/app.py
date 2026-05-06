@@ -1,7 +1,13 @@
 import time
-
+import sys
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
+
+from pathlib import Path
+
+# Ajouter la racine du projet au chemin Python
+root_path = Path(__file__).parent.parent
+sys.path.insert(0, str(root_path))
 
 from front.ServerHandler import ServerHandler
 
@@ -37,7 +43,6 @@ def handle_disconnect():
     # socketio.start_background_task(delayed_cleanup, token, request.sid)
 
 
-
 @socketio.on("audio_chunk")
 def handle_audio_chunk(data):
     client = clients.get(request.args.get("token"))
@@ -62,12 +67,14 @@ def join_room(data):
         pseudo = data["pseudo"]
         client.send(f"RR {room_id} {pseudo}")
 
+
 @socketio.on('LR')
 def leave_room(data):
     client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
         client.send(f"LR {room_id}")
+
 
 @socketio.on('PR')
 def get_players_in_room(data):
@@ -78,6 +85,7 @@ def get_players_in_room(data):
         room_id = data["room_id"]
         client.send(f"PR {room_id}")
 
+
 @socketio.on('LD')
 def get_difficulty(data):
     # on force à attendre un peu avant de lancer l'appel pour que le navigateur ait le temps de charger le lobby
@@ -86,6 +94,7 @@ def get_difficulty(data):
     if client:
         room_id = data["room_id"]
         client.send(f"LD {room_id}")
+
 
 @socketio.on('LL')
 def get_niveau(data):
@@ -96,6 +105,7 @@ def get_niveau(data):
         room_id = data["room_id"]
         client.send(f"LL {room_id}")
 
+
 @socketio.on('AD')
 def set_difficulty(data):
     client = clients.get(request.args.get("token"))
@@ -103,6 +113,7 @@ def set_difficulty(data):
         room_id = data["room_id"]
         difficulty = data["difficulty"]
         client.send(f"AD {room_id} {difficulty}")
+
 
 @socketio.on('AL')
 def set_niveau(data):
@@ -112,14 +123,25 @@ def set_niveau(data):
         level = data["level"]
         client.send(f"AL {room_id} {level}")
 
+
+@socketio.on('GG')
+def get_results(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        client.send(f"GG")
+
+
 @socketio.on('SG')
 def start_game(data):
     client = clients.get(request.args.get("token"))
     if client:
         client.send(f"SG")
+
+
 # ========================
 # ROUTES
 # ========================
+
 
 @app.route('/')
 def home():
@@ -141,8 +163,8 @@ def creerPartie():
 
     liste_niv = [
         {"id": "1", "label": "Avec partition et son", "code": "part_son"},
-        {"id": "2", "label": "Sans son", "code": "part"},
-        {"id": "3", "label": "Sans partition", "code": "son"},
+        {"id": "2", "label": "Avec partition", "code": "part"},
+        {"id": "3", "label": "Avec son", "code": "son"},
     ]
 
     return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv, isCreation=True)
@@ -168,20 +190,24 @@ def joinPartie():
 
     liste_niv = [
         {"id": "1", "label": "Avec partition et son", "code": "part_son"},
-        {"id": "2", "label": "Sans son", "code": "part"},
-        {"id": "3", "label": "Sans partition", "code": "son"},
+        {"id": "2", "label": "Avec partition", "code": "part"},
+        {"id": "3", "label": "Avec son", "code": "son"},
     ]
 
     return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv, isCreation=False)
+
 
 @app.route('/game-room')
 def startPartie():
     return render_template('game_room.html')
 
-
+@app.route('/end-room')
+def endPartie():
+    return render_template('result_screen.html')
 # ========================
 # RUN
 # ========================
+
 
 def cleanup_client(token):
     client = clients.pop(token, None)
@@ -189,6 +215,7 @@ def cleanup_client(token):
         client.close()
         socketio.emit("invalidate_token", to=client.sid)
         del client
+
 
 def delayed_cleanup(token, requestSid):
     socketio.sleep(5)
