@@ -100,14 +100,31 @@ class ClientRequestDispatcher:
 
         client.send(f"ACK_LL {room.level}")
 
+    @staticmethod
+    def handle_start_game(client, args):
+        room = client.room
+        if room is None:
+            client.send("ERR_SG ROOM_NOT_FOUND")
+            return
+
+        if room.admin != client:
+            client.send("ERR_SG USER_NOT_ADMIN")
+            return
+
+        room.start_game()
+        client.send("ACK_SG")
+
 
     @staticmethod
     def handle_audio(client, args):
         print(f"Audio reçu")
-        # TODO
-        # with open("enregistrement.webm", "wb") as f:
-        #     f.write(args)
 
+        room = client.room
+        if room is None:
+            client.send("ERR_AU ROOM_NOT_FOUND")
+            return
+
+        room.handle_client_audio(client, args)
 
 ClientRequestDispatcher.handlers = {
     "AU": ClientRequestDispatcher.handle_audio,
@@ -118,4 +135,5 @@ ClientRequestDispatcher.handlers = {
     "AL": ClientRequestDispatcher.handle_set_level,
     "LD": ClientRequestDispatcher.handle_get_difficulty,
     "LL": ClientRequestDispatcher.handle_get_level,
+    "SG": ClientRequestDispatcher.handle_start_game,
 }
