@@ -50,6 +50,11 @@ class ServerRequestDispatcher:
         print(f"Changement du niveau de la salle avec args: {args}")
         client.socketio.emit("set_niveau", args, to=client.sid)
 
+    @staticmethod
+    def handle_start_game(client, args):
+        print(f"Lancement de la partie: {args}")
+        client.socketio.emit("start_game", args, to=client.sid)
+
 ServerRequestDispatcher.handlers = {
     "ACK_CR": ServerRequestDispatcher.handle_create_room,
     "ACK_RR": ServerRequestDispatcher.handle_join_room,
@@ -62,7 +67,7 @@ ServerRequestDispatcher.handlers = {
     "ACK_LL": ServerRequestDispatcher.handle_get_niveau,
     "ACK_AD": ServerRequestDispatcher.handle_set_difficulty,
     "ACK_AL": ServerRequestDispatcher.handle_set_niveau,
-
+    "ACK_SG": ServerRequestDispatcher.handle_start_game,
 }
 
 ### TEST

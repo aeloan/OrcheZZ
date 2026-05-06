@@ -79,10 +79,14 @@ def compare_notes(audio_bytes, target_note):
 
 
 def mix_audios(round_audios):
+    # Filtrer les None et décoder les audios valides
     audios = [
         AudioSegment.from_file(io.BytesIO(b), format="webm")
-        for b in round_audios
+        for b in round_audios if b is not None
     ]
+
+    if not audios:
+        return AudioSegment.empty()
 
     base = audios[0]
 
