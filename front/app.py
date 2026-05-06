@@ -148,8 +148,8 @@ def creerPartie():
 
     liste_niv = [
         {"id": "1", "label": "Avec partition et son", "code": "part_son"},
-        {"id": "2", "label": "Sans son", "code": "part"},
-        {"id": "3", "label": "Sans partition", "code": "son"},
+        {"id": "2", "label": "Avec partition", "code": "part"},
+        {"id": "3", "label": "Avec son", "code": "son"},
     ]
 
     return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv, isCreation=True)
@@ -175,8 +175,8 @@ def joinPartie():
 
     liste_niv = [
         {"id": "1", "label": "Avec partition et son", "code": "part_son"},
-        {"id": "2", "label": "Sans son", "code": "part"},
-        {"id": "3", "label": "Sans partition", "code": "son"},
+        {"id": "2", "label": "Avec partition", "code": "part"},
+        {"id": "3", "label": "Avec son", "code": "son"},
     ]
 
     return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv, isCreation=False)
