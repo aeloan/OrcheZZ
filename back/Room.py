@@ -73,7 +73,6 @@ class Room:
 
         final_audio = mix_audios(self.round_audios.values())
         if final_audio and len(final_audio) > 0:
-            # Convertir AudioSegment en bytes
             audio_bytes = final_audio.export(format="wav").read()
             audio_b64 = base64.b64encode(audio_bytes).decode('utf-8')
             self.send_room(f"AR {audio_b64}")
