@@ -54,11 +54,15 @@
     <div class="flex-row grow-1 jc-between ai-center">
         <button id="btn-quitter" class="btn-menu">Quitter</button>
         <span id="room-code" class="padding-medium no-display"></span>
-        <button id="btn-lancer" class="btn-menu">Lancer</button>
+        {% if isCreation %}
+            <button id="btn-lancer" class="btn-menu">Lancer</button>
+        {% endif %}
     </div>
 </div>
 
 <script>
+
+    const userToken = getOrCreateToken();
     var roomId = null;
 
 
@@ -195,11 +199,23 @@
         }
     });
 
+    socket.on("start_game", (data) => {
+        debugger;
+        window.location.href = "{{ url_for('startPartie') }}?token=" + userToken;
+    });
 
     document.getElementById('btn-quitter').onclick = function() {
         console.log("leave room");
 
         socket.emit("LR", { room_id: roomId });
+    };
+
+
+    document.getElementById('btn-lancer').onclick = function() {
+        debugger;
+        console.log("lancer partie");
+
+        socket.emit("SG", {});
     };
 
     document.querySelectorAll('.container-niveau .btn-param').forEach(btn => {

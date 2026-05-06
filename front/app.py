@@ -81,7 +81,7 @@ def get_players_in_room(data):
 @socketio.on('LD')
 def get_difficulty(data):
     # on force à attendre un peu avant de lancer l'appel pour que le navigateur ait le temps de charger le lobby
-    time.sleep(2)
+    #time.sleep(2)
     client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
@@ -90,7 +90,7 @@ def get_difficulty(data):
 @socketio.on('LL')
 def get_niveau(data):
     # on force à attendre un peu avant de lancer l'appel pour que le navigateur ait le temps de charger le lobby
-    time.sleep(2)
+    #time.sleep(2)
     client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
@@ -112,6 +112,11 @@ def set_niveau(data):
         level = data["level"]
         client.send(f"AL {room_id} {level}")
 
+@socketio.on('SG')
+def start_game(data):
+    client = clients.get(request.args.get("token"))
+    if client:
+        client.send(f"SG")
 # ========================
 # ROUTES
 # ========================
@@ -168,6 +173,10 @@ def joinPartie():
     ]
 
     return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv, isCreation=False)
+
+@app.route('/game-room')
+def startPartie():
+    return render_template('game_room.html')
 
 
 # ========================
