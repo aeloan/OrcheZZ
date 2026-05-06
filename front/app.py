@@ -71,6 +71,8 @@ def leave_room(data):
 
 @socketio.on('PR')
 def get_players_in_room(data):
+    # on force à attendre un peu avant de lancer l'appel pour que le navigateur ait le temps de charger le lobby
+    time.sleep(2)
     client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
@@ -78,6 +80,8 @@ def get_players_in_room(data):
 
 @socketio.on('LD')
 def get_difficulty(data):
+    # on force à attendre un peu avant de lancer l'appel pour que le navigateur ait le temps de charger le lobby
+    time.sleep(2)
     client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
@@ -85,6 +89,8 @@ def get_difficulty(data):
 
 @socketio.on('LL')
 def get_niveau(data):
+    # on force à attendre un peu avant de lancer l'appel pour que le navigateur ait le temps de charger le lobby
+    time.sleep(2)
     client = clients.get(request.args.get("token"))
     if client:
         room_id = data["room_id"]
@@ -149,7 +155,19 @@ def joinPartie():
         {"pseudo": pseudo, "est_pret": True, "est_host": False},
     ]
 
-    return render_template('lobby.html', joueurs=liste_joueurs, difficultes=[], niveaux=[], isCreation=False)
+    liste_diff = [
+        {"id": "1", "label": "Difficile", "code": "difficile"},
+        {"id": "2", "label": "Normal", "code": "normal"},
+        {"id": "3", "label": "Facile", "code": "facile"},
+    ]
+
+    liste_niv = [
+        {"id": "1", "label": "Avec partition et son", "code": "part_son"},
+        {"id": "2", "label": "Sans son", "code": "part"},
+        {"id": "3", "label": "Sans partition", "code": "son"},
+    ]
+
+    return render_template('lobby.html', joueurs=liste_joueurs, difficultes=liste_diff, niveaux=liste_niv, isCreation=False)
 
 
 # ========================

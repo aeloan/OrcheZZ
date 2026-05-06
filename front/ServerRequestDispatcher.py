@@ -58,6 +58,8 @@ ServerRequestDispatcher.handlers = {
     "ACK_PR": ServerRequestDispatcher.handle_get_players_in_room,
     "LD": ServerRequestDispatcher.handle_get_difficulty,
     "LL": ServerRequestDispatcher.handle_get_niveau,
+    "ACK_LD": ServerRequestDispatcher.handle_get_difficulty,
+    "ACK_LL": ServerRequestDispatcher.handle_get_niveau,
     "ACK_AD": ServerRequestDispatcher.handle_set_difficulty,
     "ACK_AL": ServerRequestDispatcher.handle_set_niveau,
 

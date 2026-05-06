@@ -18,7 +18,6 @@
                 {% endfor %}
             </div>
         </div>
-        {% if isCreation %}
             <div class="barre"></div>
             <div class="show-param flex-col margin-medium basis-none">
                 <h2>Paramètres</h2>
@@ -26,18 +25,31 @@
                 <h3>Niveau</h3>
                 <div class="flex-row flex-wrap container-niveau">
                     {% for n in niveaux %}
-                        {{ param(n.id, n.label, n.code, "niveau") }}
+                        {% if isCreation %}
+                            {{ param(n.id, n.label, n.code, "niveau") }}
+                        {% else %}
+                            <span class="niveau no-display" data-id="{{ n.id }}">{{ n.label }}</span>
+                        {% endif %}
                     {% endfor %}
+                    {% if not isCreation %}
+                        <span class="niveau" data-id="-1">Non défini</span>
+                    {% endif %}
                 </div>
 
                 <h3>Difficulté</h3>
                 <div class="flex-row flex-wrap container-difficulte">
                     {% for d in difficultes %}
-                        {{ param(d.id, d.label, d.code, "difficulte") }}
+                        {% if isCreation %}
+                            {{ param(d.id, d.label, d.code, "difficulte") }}
+                        {% else %}
+                            <span class="difficulte no-display" data-id="{{ d.id }}">{{ d.label }}</span>
+                        {% endif %}
                     {% endfor %}
+                    {% if not isCreation %}
+                        <span class="difficulte" data-id="-1">Non défini</span>
+                    {% endif %}
                 </div>
             </div>
-        {% endif %}
     </div>
     <div class="flex-row grow-1 jc-between ai-center">
         <button id="btn-quitter" class="btn-menu">Quitter</button>
@@ -95,7 +107,6 @@
     });
 
     socket.on("get_players", (data) => {
-        debugger;
         roomId = data[0];
 
         const codeElement = document.getElementById("room-code");
@@ -105,12 +116,12 @@
             codeElement.classList.remove("no-display");
         }
 
-        let listPlayer = data[1].split('.');
+        let listPlayer = data.slice(1);
 
         const container = document.querySelector(".list-players");
 
         if (container && listPlayer.length > 0 && listPlayer[0] !== "") {
-            //container.innerHTML = "";
+            container.innerHTML = "";
 
             let i = 0;
             listPlayer.forEach(playerData => {
@@ -136,6 +147,10 @@
         } else if (container) {
             container.innerHTML = "<p>En attente de joueurs...</p>";
         }
+
+        socket.emit("LD", { room_id: roomId });
+
+        socket.emit("LL", { room_id: roomId });
     });
 
     socket.on("quit_room", (data) => {
@@ -143,16 +158,43 @@
     });
 
     socket.on("get_diff", (data) => {
-        let btndiff = document.querySelector(`[data-categorie="difficulte"][data-id="${data[0]}"]`);
+        if (window.location.pathname === "/creer-partie") {
+            let btndiff = document.querySelector(`[data-categorie="difficulte"][data-id="${data[0]}"]`);
 
-        btndiff.classList.add("active");
+            btndiff.classList.add("active");
+        }
+        else {
+            let allSpanDiff = document.querySelectorAll(`span.difficulte`);
+
+            allSpanDiff.forEach(span => {
+                span.classList.add("no-display");
+            });
+
+            let selectedSpandiff = document.querySelector(`span.difficulte[data-id="${data[0]}"]`);
+
+            selectedSpandiff.classList.remove("no-display");
+        }
     });
 
     socket.on("get_niveau", (data) => {
-        let btnniv = document.querySelector(`[data-categorie="niveau"][data-id="${data[0]}"]`);
+        if (window.location.pathname === "/creer-partie") {
+            let btnniv = document.querySelector(`[data-categorie="niveau"][data-id="${data[0]}"]`);
 
-        btnniv.classList.add("active");
+            btnniv.classList.add("active");
+        }
+        else {
+            let allSpanniv = document.querySelectorAll(`span.niveau`);
+
+            allSpanniv.forEach(span => {
+                span.classList.add("no-display");
+            });
+
+            let selectedSpanniv = document.querySelector(`span.niveau[data-id="${data[0]}"]`);
+
+            selectedSpanniv.classList.remove("no-display");
+        }
     });
+
 
     document.getElementById('btn-quitter').onclick = function() {
         console.log("leave room");
