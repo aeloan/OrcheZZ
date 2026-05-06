@@ -1,5 +1,48 @@
-<span>Le jeu est lancé</span>
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Partie</h1>
+<div class="flex-col grow-1 jc-center ai-center">
+    <span class="current-note"></span>
+</div>
 
 <script>
-    startRecording();
+
+    socket.on("init_round", (data) => {
+        const note = document.querySelector(".current-note");
+
+        note.innerText = data[0];
+
+        startRecording();
+    });
+
+    socket.on("end_round", (data) => {
+        console.log("Fin du round - lecture du son mixé");
+
+        const audioB64 = data[0];
+
+        if (!audioB64) {
+            console.warn("Aucun audio reçu");
+            return;
+        }
+
+        try {
+            const audio = new Audio();
+            audio.src = 'data:audio/wav;base64,' + audioB64;
+            audio.volume = 0.8;
+
+            audio.onplay = () => console.log("Lecture du son mixé");
+            audio.onended = () => console.log("Son terminé");
+            audio.onerror = () => console.error("Erreur audio");
+
+            // Lancer la lecture
+            audio.play();
+
+        } catch (error) {
+            console.error("Erreur:", error);
+        }
+    });
+
 </script>
+{% endblock %}

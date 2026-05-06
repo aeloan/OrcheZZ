@@ -50,3 +50,7 @@
 .error-pseudo, .error-code {
     color: red;
 }
+
+.current-note {
+    font-size: 200px;
+}

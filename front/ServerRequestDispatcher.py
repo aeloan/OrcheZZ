@@ -55,6 +55,17 @@ class ServerRequestDispatcher:
         print(f"Lancement de la partie: {args}")
         client.socketio.emit("start_game", args, to=client.sid)
 
+
+    @staticmethod
+    def handle_init_round(client, args):
+        print(f"Lancement du round: {args}")
+        client.socketio.emit("init_round", args, to=client.sid)
+
+    @staticmethod
+    def handle_end_round(client, args):
+        print(f"Fin du round: {args}")
+        client.socketio.emit("end_round", args, to=client.sid)
+
 ServerRequestDispatcher.handlers = {
     "ACK_CR": ServerRequestDispatcher.handle_create_room,
     "ACK_RR": ServerRequestDispatcher.handle_join_room,
@@ -68,6 +79,8 @@ ServerRequestDispatcher.handlers = {
     "ACK_AD": ServerRequestDispatcher.handle_set_difficulty,
     "ACK_AL": ServerRequestDispatcher.handle_set_niveau,
     "ACK_SG": ServerRequestDispatcher.handle_start_game,
+    "RS": ServerRequestDispatcher.handle_init_round,
+    "AR": ServerRequestDispatcher.handle_end_round,
 }
 
 ### TEST

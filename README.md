@@ -35,6 +35,9 @@ Cette documentation va donc se concentrer sur une installation sur cet OS.
 
 ## 1. Prérequis
 
+- **Python 3.8 ou supérieur** : [Télécharger Python](https://www.python.org/downloads/)
+
+- **FFmpeg** : Nécessaire pour le traitement audio
 ```bash
 winget install "FFmpeg (Essentials Build)"
 ```
@@ -49,8 +52,10 @@ python -m venv .venv
 ## 3. Installer les dépendances
 
 ```bash
-cd back && pip install -r requirements.txt
-cd ../front && pip install -r requirements.txt
+cd back
+pip install -r requirements.txt
+cd ../front
+pip install -r requirements.txt
 cd ..
 ```
 

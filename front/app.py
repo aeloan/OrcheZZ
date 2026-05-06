@@ -1,7 +1,14 @@
 import time
-
+import sys
+import os
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
+
+from pathlib import Path
+
+# Ajouter la racine du projet au chemin Python
+root_path = Path(__file__).parent.parent
+sys.path.insert(0, str(root_path))
 
 from front.ServerHandler import ServerHandler
 

@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import random
 import string
 import threading
@@ -70,7 +71,11 @@ class Room:
             self.score_game[key] += val
 
         final_audio = mix_audios(self.round_audios.values())
-        self.send_room(f"AR {final_audio}")
+        if final_audio:
+            audio_b64 = base64.b64encode(final_audio).decode('utf-8')
+            self.send_room(f"AR {audio_b64}")
+        else:
+            self.send_room("AR")
 
     def handle_client_audio(self, client_caller, audio_bytes: bytes):
         if self.running:
