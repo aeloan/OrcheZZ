@@ -23,6 +23,7 @@ DS ## : Supprimer un style musical - Code style
 AL ##: Ajouter le niveau - Code niveau
 
 -- Cours du jeu
+RS ## : Envoi de la partition - Note
 SR ## : Résultat de la manche - Score
 AR ## : Audio final de la manche - Audio MP3
 EG : Fin de partie
@@ -36,3 +37,5 @@ RR ## : Nouveau joueur qui rejoint la salle - Joueur
 LD ## : Récupérer la difficulté de la partition de la salle - Difficulté
 LT ##+ : Récupérer les styles musicaux de la salle - Style1 Style2 ...
 LL ## : Récupérer le niveau de la salle - Niveau
+AU ## : Envoi de l'audio d'une manche
+AR ## : Envoi du combiné des audios d'une manche
