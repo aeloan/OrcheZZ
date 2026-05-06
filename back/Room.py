@@ -1,5 +1,6 @@
 import asyncio
 import base64
+import io
 import random
 import string
 import threading
@@ -71,8 +72,10 @@ class Room:
             self.score_game[key] += val
 
         final_audio = mix_audios(self.round_audios.values())
-        if final_audio:
-            audio_b64 = base64.b64encode(final_audio).decode('utf-8')
+        if final_audio and len(final_audio) > 0:
+            # Convertir AudioSegment en bytes
+            audio_bytes = final_audio.export(format="wav").read()
+            audio_b64 = base64.b64encode(audio_bytes).decode('utf-8')
             self.send_room(f"AR {audio_b64}")
         else:
             self.send_room("AR")
