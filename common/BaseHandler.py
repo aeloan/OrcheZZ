@@ -49,7 +49,7 @@ class BaseHandler(ABC):
         if handler:
             handler(self, args)
         else:
-            self.send(str({"type": "error", "msg": "Unknown command"}))
+            print("Unknown command")
 
     def send(self, message: str | bytes):
         try:

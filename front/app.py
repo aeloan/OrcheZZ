@@ -248,4 +248,8 @@ def inactivity_watcher():
 
 if __name__ == '__main__':
     socketio.start_background_task(inactivity_watcher)
-    socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
+    socketio.run(app,
+                 host="0.0.0.0",
+                 port=5000,
+                 debug=True,
+                 allow_unsafe_werkzeug=True)

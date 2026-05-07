@@ -85,6 +85,13 @@ http://localhost:5000
 
 Les services communiquant par socket, une documentation des différents codes envoyés/reçus par le serveur et le client sont respectivement décrits dans `./CodeSocketClient` et `./CodeSocketServeur`
 
+## 6. Avancements
+
+Aujourd'hui, les fonctionnalités restantes à implémenter sont :
+* L'utilisation de partitions au lieu de notes simples
+* Meilleure gestion des erreurs
+* Gestion des paramètres et des filtres
+
 ## Auteurs
 Eloan ANDRE et Anna BOUDOUL (FISA2)
 

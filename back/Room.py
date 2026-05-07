@@ -7,6 +7,8 @@ from back.MusicScoreScorer import compare_notes, mix_audios
 
 notes = ["A", "B", "C", "D", "E", "F", "G"]
 
+NB_ROUNDS = 5
+
 
 class Room:
     def __init__(self, admin):
@@ -40,7 +42,7 @@ class Room:
             threading.Thread(target=lambda: asyncio.run(self.game_loop()), daemon=True).start()
 
     async def game_loop(self):
-        for i in range (5) :
+        for i in range(NB_ROUNDS):
             await asyncio.sleep(2)
             self.init_round()
             # On attend 5 secondes sans bloquer les autres joueurs/salons
@@ -70,7 +72,7 @@ class Room:
 
     def end_round(self):
         for key, val in self.score_round.items():
-            self.score_game[key] += val
+            self.score_game[key] += (val / NB_ROUNDS) * 100
 
         final_audio = mix_audios(self.round_audios.values())
         if final_audio and len(final_audio) > 0:
